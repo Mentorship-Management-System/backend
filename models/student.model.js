@@ -1,6 +1,7 @@
 const db = require('../db');
 const jwt = require('jsonwebtoken');
 const { secretKey } = require('../config');
+const crypto = require("crypto");
 
 const studentModel = {
     getAllStudents: (callback) => {
@@ -8,6 +9,9 @@ const studentModel = {
     },
     getStudentByRollNo: (rollno, callback) => {
         db.query('SELECT * FROM students WHERE enrollment_no = ?', [rollno], callback);
+    },
+    getStudentByEmail: (email, callback) => {
+        db.query('SELECT * FROM students WHERE email = ?', [email], callback);
     },
     addStudent: (student, callback) => {
         db.query('INSERT INTO students SET ?', student, callback);
@@ -19,7 +23,13 @@ const studentModel = {
         db.query('DELETE FROM students WHERE enrollment_no = ?', [rollno], callback);
     },
     authenticateStudent: (tezu_email, password, callback) => {
-        db.query('SELECT * FROM students WHERE tezu_email = ? AND password = ?', [tezu_email, password], (err, results) => {
+        const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
+        db.query(`
+            SELECT a.*, c.type
+            FROM students a
+            INNER JOIN credentials c ON a.gsuite_id = c.email
+            WHERE c.email = ? AND c.password = ? AND c.type = 'student'
+        `, [tezu_email, hashedPassword], (err, results) => {
             if (err) {
                 return callback(err, null);
             }
@@ -29,17 +39,151 @@ const studentModel = {
             }
 
             const student = results[0];
-            const token = jwt.sign({ id: student.enrollment_no, email: student.email }, secretKey, { expiresIn: '6h' });
+            const token = jwt.sign({ id: student.student_id, email: student.gsuite_id }, secretKey);
 
             callback(null, { student, token });
         });
     },
+    searchStudents: (filter, callback) => {
+        const filterEntries = Object.entries(filter);
+        const whereClause = filterEntries.map(([key, value]) => `${key} = ?`).join(' AND ');
+        const query = `SELECT * FROM students WHERE ${whereClause}`;
+        const queryParams = filterEntries.map(([key, value]) => value);
+        db.query(query, queryParams, callback);
+    },
+    getStudentsByMentorIndex: (mentorIndex, callback) => {
+        const query = `
+            SELECT students.*
+            FROM students
+            JOIN mentor_mentee ON students.enrollment_no = mentor_mentee.mentee_enrollment_no
+            WHERE mentor_mentee.mentor_index = ?;
+        `;
+        db.query(query, [mentorIndex], callback);
+    },
+    getStudentsWithNullMentorIndex: (callback) => {
+        const query = 'SELECT * FROM students WHERE mentor_index IS NULL';
+        db.query(query, callback);
+    },
+    updateStudentMentorIndex: (enrollmentNo, newMentorIndex, callback) => {
+        const query = 'UPDATE students SET mentor_index = ? WHERE enrollment_no = ?';
+        db.query(query, [newMentorIndex, enrollmentNo], callback);
+    },
+    getStudentWithMentorDetails: (enrollmentNo, callback) => {
+        const query = `
+            SELECT
+                students.*,
+                mentors.*
+            FROM students
+            LEFT JOIN mentors ON students.mentor_index = mentors.mentor_index
+            WHERE students.enrollment_no = ?
+        `;
+        db.query(query, [enrollmentNo], callback);
+    },
+    getAvailableMentees: (callback) => {
+        const query = `
+            SELECT *
+            FROM students
+            WHERE mentor_index IS NULL;
+        `;
+        db.query(query, callback);
+    },
+    assignMenteesToMentor: (mentorIndex, menteeEnrollmentNos, callback) => {
+        // Step 1: Update students with the new mentor_index
+        const updateStudentsQuery = 'UPDATE students SET mentor_index = ? WHERE enrollment_no IN (?)';
+        db.query(updateStudentsQuery, [mentorIndex, menteeEnrollmentNos], (updateStudentsErr) => {
+            if (updateStudentsErr) {
+                return callback(updateStudentsErr);
+            }
+
+            // Step 2: Insert/update rows in mentor_mentee table
+            const insertMentorMenteeQuery = 'INSERT INTO mentor_mentee (mentor_index, mentee_enrollment_no) VALUES ? ON DUPLICATE KEY UPDATE mentor_index = VALUES(mentor_index)';
+            const insertValues = menteeEnrollmentNos.map((enrollmentNo) => [mentorIndex, enrollmentNo]);
+
+            db.query(insertMentorMenteeQuery, [insertValues], (insertMentorMenteeErr) => {
+                if (insertMentorMenteeErr) {
+                    return callback(insertMentorMenteeErr);
+                }
+
+                // Step 3: Fetch details of assigned mentees
+                const getAssignedMenteesQuery = `
+                    SELECT students.*
+                    FROM students
+                    JOIN mentor_mentee ON students.enrollment_no = mentor_mentee.mentee_enrollment_no
+                    WHERE mentor_mentee.mentor_index = ?
+                `;
+                db.query(getAssignedMenteesQuery, [mentorIndex], (getAssignedMenteesErr, assignedMentees) => {
+                    if (getAssignedMenteesErr) {
+                        return callback(getAssignedMenteesErr);
+                    }
+
+                    callback(null, assignedMentees);
+                });
+            });
+        });
+    },
     insertStudents: (students, callback) => {
-        const values = students.map(student => [student.fname, student.lname, student.department, student.programme, student.enrollment_no, student.phone, student.personal_email, student.tezu_email, student.password, student.date_of_birth]);
-        const query = 'INSERT INTO students (fname, lname, department, programme, enrollment_no, phone, personal_email, tezu_email, password, date_of_birth) VALUES ?';
+        const values = students.map(student => [student.fname, student.lname, student.email, student.gsuite_id, student.gender, student.enrollment_no, student.phone, student.programme, student.enrollment_year, student.dob]);
+        const query = 'INSERT INTO students (fname, lname, email, gsuite_id, gender, enrollment_no, phone, programme, enrollment_year, dob) VALUES ?';
 
         db.query(query, [values], callback);
     },
+
+    insertCredentials: (students, callback) => {
+        const values = students.map(student => [student.gsuite_id, student.hashedPassword, "student"]);
+        const query = 'INSERT INTO credentials (email, password, type) VALUES ?';
+
+        db.query(query, [values], callback);
+    },
+    getRandomStudents: (callback) => {
+        db.query('SELECT * FROM students where mentor_id IS NULL ORDER BY RAND()', (err, results) => {
+            if (err) {
+                return callback(err, null);
+            }
+            callback(null, results);
+        });
+    },
+    updateMentorIds: (students, callback) => {
+        const updateQueries = students.map(student => {
+            return new Promise((resolve, reject) => {
+                db.query('UPDATE students SET mentor_id = ? WHERE student_id = ?', [student.mentor_id, student.student_id], (err, result) => {
+                    if (err) {
+                        reject(err);
+                        return;
+                    }
+                    resolve();
+                });
+            });
+        });
+        Promise.all(updateQueries)
+            .then(() => {
+                callback(null);
+            })
+            .catch(err => {
+                callback(err);
+            });
+    },
+
+    getStudentsByMentorId: (mentorId, callback) => {
+        db.query('SELECT * FROM students WHERE mentor_id = ?', [mentorId], (err, results) => {
+            if (err) {
+                return callback(err, null);
+            }
+            callback(null, results);
+        });
+    },
+
+    getStudentsByIds: (studentIds, callback) => {
+        // Construct the SQL query to fetch students by their IDs
+        const query = 'SELECT * FROM students WHERE student_id IN (?)';
+        
+        // Execute the query with the provided student IDs
+        db.query(query, [studentIds], (err, results) => {
+            if (err) {
+                return callback(err, null);
+            }
+            callback(null, results);
+        });
+    }
 };
 
 module.exports = studentModel;

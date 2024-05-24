@@ -1,8 +1,28 @@
 const studentModel = require('../models/student.model');
+const mentorModel = require('../models/mentor.model');
+const fs = require("fs");
+const crypto = require("crypto")
+
+// Function to generate random password
+const generateRandomPassword = (length) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let password = '';
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        password += characters.charAt(randomIndex);
+    }
+    return password;
+}
+
+const hashPassword = (password) => {
+    const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
+    return hashedPassword;
+}
 
 const userController = {
     loginUser: (req, res) => {
         const { tezu_email, password } = req.body;
+        console.log(req.body);
 
         studentModel.authenticateStudent(tezu_email, password, (err, result) => {
             if (err) {
@@ -10,11 +30,12 @@ const userController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
+            // console.log(result);
 
             if (!result) {
                 res.status(401).json({ error: 'Invalid email or password' });
             } else {
-                res.status(200).json({ success: true, student: result });
+                res.status(200).json({ success: true, result });
             }
         });
     },
@@ -25,7 +46,7 @@ const userController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(200).json(results);
+            res.status(200).json({ success: true, students: results });
         });
     },
     getStudentById: (req, res) => {
@@ -39,31 +60,53 @@ const userController = {
             if (results.length === 0) {
                 res.status(404).json({ error: 'Student not found' });
             } else {
-                res.status(200).json(results[0]);
+                res.status(200).json({ success: true, student: results[0] });
             }
         });
     },
     addStudent: (req, res) => {
-        const newUser = req.body;
-        studentModel.addStudent(newUser, (err, results) => {
+        const newStudent = req.body;
+        studentModel.addStudent(newStudent, (err, results) => {
             if (err) {
                 console.error('Error adding student:', err);
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(201).json({ id: results.insertId, message: 'Student added successfully' });
+            studentModel.getStudentByEmail(newStudent.email, (err, addedStudent) => {
+                if (err) {
+                    console.error('Error fetching added student:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
+
+                // Send the added mentor information in the response
+                res.status(201).json({ success: true, student: addedStudent, message: 'Student added successfully' });
+            });
         });
     },
     updateStudent: (req, res) => {
         const userId = req.params.rollno;
         const updatedUser = req.body;
-        studentModel.updateStudent(userId, updatedUser, (err) => {
+        studentModel.updateStudent(userId, updatedUser, (err, result) => {
             if (err) {
                 console.error('Error updating student:', err);
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(200).json({ message: 'Student updated successfully' });
+            if (result.affectedRows > 0) {
+                studentModel.getStudentByRollNo(userId, (err, updatedResults) => {
+                    if (err) {
+                        console.error('Error fetching updated student:', err);
+                        res.status(500).json({ error: 'Internal Server Error' });
+                        return;
+                    }
+
+                    const updatedStudent = updatedResults[0];
+                    res.status(200).json({ success: true, message: 'Student updated successfully', student: updatedStudent });
+                });
+            } else {
+                res.status(404).json({ error: 'Student not found or no changes made' });
+            }
         });
     },
     deleteStudent: (req, res) => {
@@ -74,7 +117,92 @@ const userController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(200).json({ message: 'Student deleted successfully' });
+            res.status(200).json({ sucess: true, message: 'Student deleted successfully' });
+        });
+    },
+    searchStudents: (req, res) => {
+        const filter = req.body; // Assuming the filter is sent in the request body
+        studentModel.searchStudents(filter, (err, results) => {
+            if (err) {
+                console.error('Error searching students:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+            res.status(200).json({ success: true, students: results });
+        });
+    },
+    getStudentsByMentorIndex: (req, res) => {
+        const mentorIndex = req.params.mentorIndex; // Assuming the mentor_index is part of the route params
+        mentorModel.getMentorById(mentorIndex, (mentorErr, mentorResult) => {
+            if (mentorErr) {
+                console.error('Error checking mentor existence:', mentorErr);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+
+            if (!mentorResult) {
+                res.status(404).json({ success: false, message: 'Mentor not found' });
+                return;
+            }
+
+            studentModel.getStudentsByMentorIndex(mentorIndex, (err, results) => {
+                if (err) {
+                    console.error('Error fetching students by mentor index:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
+                res.status(200).json({ success: true, mentor: mentorResult[0], students: results });
+            });
+        });
+    },
+    getStudentWithMentorDetails: (req, res) => {
+        const enrollmentNo = req.params.enrollmentNo;
+
+        studentModel.getStudentWithMentorDetails(enrollmentNo, (err, result) => {
+            if (err) {
+                console.error('Error fetching student details with mentor:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+
+            if (!result) {
+                res.status(404).json({ message: 'Student not found' });
+            } else {
+                res.status(200).json({ success: true, studentWithMentor: result });
+            }
+        });
+    },
+    getAvailableMentees: (req, res) => {
+        studentModel.getAvailableMentees((err, mentees) => {
+            console.log(mentees);
+            console.log(err);
+            if (err) {
+                console.error('Error fetching available mentees:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+
+            res.status(200).json({ success: true, mentees });
+        });
+    },
+    assignMenteesToMentor: (req, res) => {
+        const { mentor_index, mentee_enrollment_nos } = req.body;
+    
+        // Validate that mentor_index and mentee_enrollment_nos are present
+        if (!mentor_index || !mentee_enrollment_nos || !Array.isArray(mentee_enrollment_nos)) {
+            return res.status(400).json({ error: 'Invalid request payload' });
+        }
+    
+        // Assign mentees to the mentor
+        studentModel.assignMenteesToMentor(mentor_index, mentee_enrollment_nos, (err, result) => {
+            if (err) {
+                console.error('Error assigning mentees to mentor:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+    
+
+            res.status(200).json({ success: true, message: 'Mentees assigned to mentor successfully', mentees: result });
         });
     },
     insertStudents: (req, res) => {
@@ -208,6 +336,54 @@ const userController = {
             } else {
                 res.status(201).json({ message: 'Students inserted successfully' });
             }
+        });
+    },
+
+    generate: (req, res) => {
+        let studentsData = req.body.students;
+
+        studentsData.forEach(admin => {
+            admin.password = generateRandomPassword(8); // Change 8 to desired password length
+        });
+
+        const csvData = studentsData.map(student => {
+            return `${student.student_id},${student.fname},${student.lname},${student.gsuite_id},${student.password}`;
+        }).join('\n');
+        
+        // Write data to a CSV file
+        fs.writeFile('./students.csv', csvData, (err) => {
+            if (err) {
+                console.error('Error writing to CSV file:', err);
+                return;
+            }
+            console.log('Student data has been written to students.csv');
+        });
+
+        studentsData.forEach(student => {
+            student.hashedPassword = hashPassword(student.password); // Hash the password
+            delete student.password;
+        });
+
+        studentModel.insertCredentials(studentsData, (err, result) => {
+            if (err) {
+                console.error('Error generating student credentials:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            } else {
+                console.log('Student credentials generated successfully.');
+                res.status(200).json({ success: true, result: studentsData });
+            }
+        });
+    },
+
+    getStudentsByMentorId: (req, res) => {
+        const mentor_id = req.params.mentorId;
+        studentModel.getStudentsByMentorId(mentor_id, (err, results) => {
+            if (err) {
+                console.error('Error fetching students:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+            res.status(200).json({ success: true, students: results });
         });
     },
 };

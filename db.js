@@ -4,7 +4,7 @@ const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'mentor_mentee_db'
+    database: 'mentorship_management'
 });
 
 // db.connect((err) => {

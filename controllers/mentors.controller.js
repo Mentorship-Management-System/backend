@@ -1,3 +1,4 @@
+const studentModel = require('../models/student.model');
 const mentorModel = require('../models/mentor.model');
 
 const mentorController = {
@@ -15,7 +16,7 @@ const mentorController = {
             if (!result) {
                 res.status(401).json({ error: 'Invalid email or password' });
             } else {
-                res.status(200).json({ success: true, mentor: result });
+                res.status(200).json({ success: true, result });
             }
         });
     },
@@ -26,7 +27,7 @@ const mentorController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(200).json(results);
+            res.status(200).json({ success: true, mentors: results });
         });
     },
 
@@ -38,10 +39,11 @@ const mentorController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            if (results.length === 0) {
+            if (results && results.length === 0) {
                 res.status(404).json({ error: 'Mentor not found' });
             } else {
-                res.status(200).json(results[0]);
+                console.log(results);
+                res.status(200).json({ success: true, mentor: results });
             }
         });
     },
@@ -54,20 +56,42 @@ const mentorController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(201).json({ id: results.insertId, message: 'Mentor added successfully' });
+            mentorModel.getMentorByEmail(newMentor.email, (err, addedMentor) => {
+                if (err) {
+                    console.error('Error fetching added mentor:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
+
+                // Send the added mentor information in the response
+                res.status(201).json({ success: true, mentor: addedMentor, message: 'Mentor added successfully' });
+            });
         });
     },
 
     updateMentor: (req, res) => {
         const mentorId = req.params.mentorId;
         const updatedMentor = req.body;
-        mentorModel.updateMentor(mentorId, updatedMentor, (err) => {
+        mentorModel.updateMentor(mentorId, updatedMentor, (err, result) => {
             if (err) {
                 console.error('Error updating mentor:', err);
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(200).json({ message: 'Mentor updated successfully' });
+            if (result.affectedRows > 0) {
+                mentorModel.getMentorById(mentorId, (err, updatedResults) => {
+                    if (err) {
+                        console.error('Error fetching updated mentor:', err);
+                        res.status(500).json({ error: 'Internal Server Error' });
+                        return;
+                    }
+
+                    const updatedMentor = updatedResults[0];
+                    res.status(200).json({ message: 'Mentor updated successfully', mentor: updatedMentor });
+                });
+            } else {
+                res.status(404).json({ error: 'Mentor not found or no changes made' });
+            }
         });
     },
 
@@ -82,6 +106,107 @@ const mentorController = {
             res.status(200).json({ message: 'Mentor deleted successfully' });
         });
     },
+
+    allocateMentees: (req, res) => {
+        const assignedMentors = [];
+
+        // Step 1: Fetch students without mentors
+        studentModel.getStudentsWithNullMentorIndex((err, students) => {
+            if (err) {
+                console.error('Error fetching students:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+
+            // Step 2: Fetch all mentors
+            mentorModel.getAllAvailableMentors((mentorErr, mentors) => {
+                if (mentorErr) {
+                    console.error('Error fetching mentors:', mentorErr);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
+
+                // Step 3: Calculate target number of students per mentor
+                const targetStudentsPerMentor = Math.floor(students.length / mentors.length);
+
+                // Step 4: Randomly assign students to mentors
+                const shuffledStudents = _.shuffle(students);
+                let currentMentorIndex = 0;
+                let studentsAssigned = 0;
+                const assignedStudents = new Set(); // Keep track of assigned students
+
+                shuffledStudents.forEach((student) => {
+                    // Check if the current mentor has reached the target number of students
+                    if (studentsAssigned >= targetStudentsPerMentor) {
+                        currentMentorIndex += 1;
+                        studentsAssigned = 0;
+                    }
+
+                    // Check if the student is already assigned to a mentor
+                    if (!assignedStudents.has(student.enrollment_no)) {
+                        // Assign the student to the current mentor
+                        const newMentorIndex = mentors[currentMentorIndex].mentor_index;
+                        studentModel.updateStudentMentorIndex(student.enrollment_no, newMentorIndex, (updateErr) => {
+                            if (updateErr) {
+                                console.error('Error updating student mentor_index:', updateErr);
+                                res.status(500).json({ error: 'Internal Server Error' });
+                                return;
+                            }
+                        });
+
+                        // Mark the student as assigned
+                        assignedStudents.add(student.enrollment_no);
+
+                        // Update assigned mentors array
+                        const mentorWithMentees = {
+                            mentor: mentors[currentMentorIndex],
+                            mentees: assignedStudents.has(student.enrollment_no) ? [student] : [],
+                        };
+
+                        const existingMentor = assignedMentors.find((m) => m.mentor.mentor_index === newMentorIndex);
+
+                        if (existingMentor) {
+                            existingMentor.mentees.push(student);
+                        } else {
+                            assignedMentors.push(mentorWithMentees);
+                        }
+
+                        studentsAssigned += 1;
+                    }
+                });
+
+                // Respond with the array of mentors and assigned mentees
+                res.status(200).json({ success: true, mentorsWithMentees: assignedMentors });
+            });
+        })
+    },
+
+    getAllMentorsWithMentees: (req, res) => {
+        mentorModel.getAllMentorsWithMentees((err, mentorsWithMentees) => {
+            if (err) {
+                console.error('Error fetching mentors with mentees:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+
+            res.status(200).json({ success: true, data: mentorsWithMentees });
+        });
+    },
+
+    getMenteesByMentorIndex: (req, res) => {
+        const mentorIndex = req.params.mentorIndex;
+
+        mentorModel.getMenteesByMentorIndex(mentorIndex, (err, mentees) => {
+            if (err) {
+                console.error('Error fetching mentees by mentor index:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+
+            res.status(200).json({ success: true, mentees });
+        });
+    },
+
     insertMentors: (req, res) => {
         const mentors = [
             {
@@ -171,6 +296,19 @@ const mentorController = {
                 res.status(500).json({ error: 'Internal Server Error' });
             } else {
                 res.status(201).json({ message: 'Mentors inserted successfully' });
+            }
+        });
+    },
+
+    updateMentorAvailability: (req, res) => {
+        const mentor_id = req.params.mentorId;
+        const isAvailable = req.body.isAvailable;
+        mentorModel.updateMentorAvailability(mentor_id, isAvailable, (err, result) => {
+            if (err) {
+                console.error('Error inserting mentors:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            } else {
+                res.status(201).json({ message: 'Availability updated successfully', mentor: result });
             }
         });
     },

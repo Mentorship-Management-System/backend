@@ -1,0 +1,75 @@
+let mentors = [
+  {
+    mentor_id: 'MT001',
+    honorifics: 'Dr.',
+    fname: 'Bhogeswar',
+    lname: 'Borah',
+    email: 'bhogeswar@gmail.com',
+    gsuite_id: 'bgb@tezu.ernet.in',
+    gender: 'Male',
+    phone: null,
+    isAvailableAsMentor: 1,
+    position: 'Professor',
+    extension: '03712-275355'
+  },
+  {
+    mentor_id: 'MT003',
+    honorifics: 'Dr.',
+    fname: 'Utpal',
+    lname: 'Sharma',
+    email: 'utpal@gmail.com',
+    gsuite_id: 'utpal@tezu.ernet.in',
+    gender: 'Male',
+    phone: null,
+    isAvailableAsMentor: 1,
+    position: 'Professor and Dean, Planning & Development',
+    extension: '03712-275107'
+  }
+]
+let students = [
+  {
+    student_id: 'ST002',
+    fname: 'Sanjay',
+    lname: 'Das',
+    email: 'sanjay@gmail.com',
+    gsuite_id: 'csb20077@tezu.ac.in',
+    gender: 'Male',
+    enrollment_no: 'CSB20077',
+    phone: '987654321',
+    programme: 'Bachelor of Technology',
+    enrollment_year: 2020,
+    mentor_id: null,
+    cgpa: null,
+    dob: null
+  },
+  {
+    student_id: 'ST001',
+    fname: 'Dheeraj',
+    lname: 'Gogoi',
+    email: 'dheerajgogoi2@gmail.com',
+    gsuite_id: 'csb20028@tezu.ac.in',
+    gender: 'Male',
+    enrollment_no: 'CSB20028',
+    phone: '7099485845',
+    programme: 'Bachelor of Technology',
+    enrollment_year: 2020,
+    mentor_id: null,
+    cgpa: null,
+    dob: null
+  },
+  {
+    student_id: 'ST003',
+    fname: 'Reehan',
+    lname: 'Sarmah',
+    email: 'reehan@gmail.com',
+    gsuite_id: 'csb20083@tezu.ac.in',
+    gender: 'Male',
+    enrollment_no: 'CSB20083',
+    phone: '987654301',
+    programme: 'Bachelor of Technology',
+    enrollment_year: 2020,
+    mentor_id: null,
+    cgpa: null,
+    dob: null
+  }
+]
