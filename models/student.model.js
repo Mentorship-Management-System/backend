@@ -5,10 +5,29 @@ const crypto = require("crypto");
 
 const studentModel = {
     getAllStudents: (callback) => {
-        db.query('SELECT * FROM students', callback);
+        const query = `
+        SELECT students.*, 
+               mentors.mentor_id AS mentor_id, 
+               CONCAT(mentors.honorifics, ' ', mentors.fname, ' ', mentors.lname) AS mentor_name, 
+               mentors.email AS mentor_email, 
+               mentors.phone AS mentor_phone
+        FROM students
+        LEFT JOIN mentors ON students.mentor_id = mentors.mentor_id
+        `;
+        db.query(query, callback);
     },
     getStudentByRollNo: (rollno, callback) => {
-        db.query('SELECT * FROM students WHERE enrollment_no = ?', [rollno], callback);
+        const query = `
+            SELECT students.*, 
+                mentors.mentor_id AS mentor_id, 
+                CONCAT(mentors.honorifics, ' ', mentors.fname, ' ', mentors.lname) AS mentor_name, 
+                mentors.email AS mentor_email, 
+                mentors.phone AS mentor_phone
+            FROM students
+            LEFT JOIN mentors ON students.mentor_id = mentors.mentor_id
+            WHERE students.enrollment_no = ?
+        `;
+        db.query(query, [rollno], callback);
     },
     getStudentByEmail: (email, callback) => {
         db.query('SELECT * FROM students WHERE email = ?', [email], callback);

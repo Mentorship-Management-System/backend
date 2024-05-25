@@ -46,7 +46,16 @@ const userController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(200).json({ success: true, students: results });
+            const studentsWithMentors = results.map(student => ({
+                ...student,
+                mentor: {
+                    mentor_id: student.mentor_id,
+                    mentor_name: student.mentor_name,
+                    email: student.mentor_email,
+                    phone: student.mentor_phone
+                }
+            }));
+            res.status(200).json({ success: true, students: studentsWithMentors });
         });
     },
     getStudentById: (req, res) => {
@@ -60,7 +69,17 @@ const userController = {
             if (results.length === 0) {
                 res.status(404).json({ error: 'Student not found' });
             } else {
-                res.status(200).json({ success: true, student: results[0] });
+                const student = results[0];
+                const studentWithMentor = {
+                    ...student,
+                    mentor: {
+                        mentor_id: student.mentor_id,
+                        name: student.mentor_name,
+                        email: student.mentor_email,
+                        phone: student.mentor_phone
+                    }
+                };
+                res.status(200).json({ success: true, student: studentWithMentor });
             }
         });
     },

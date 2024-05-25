@@ -6,7 +6,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 router.post('/login', studentsController.loginUser);
 router.post('/generate', studentsController.generate);
 
-router.get('/all', studentsController.getAllStudents);
+router.get('/all', authMiddleware, studentsController.getAllStudents);
 router.get('/mentor/:mentorId', studentsController.getStudentsByMentorId);
 router.post('/add', authMiddleware, studentsController.addStudent);
 router.post('/insert_students', studentsController.insertStudents);
