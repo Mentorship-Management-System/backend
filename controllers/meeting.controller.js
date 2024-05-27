@@ -23,7 +23,7 @@ const meetingController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(201).json({ success: true, message: 'Meeting added successfully', meetings });
+            res.status(201).json({ success: true, message: 'Meeting added successfully', meetings: meetings.reverse() });
         });
     },
 
@@ -52,7 +52,7 @@ const meetingController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(200).json({ success: true, meetings });
+            res.status(200).json({ success: true, meetings: meetings.reverse() });
         });
     },
 
@@ -231,6 +231,7 @@ const meetingController = {
     updateMeetingApprove: (req, res) => {
         const mentorId = req.params.mentorId;
         const meetingId = req.params.meetingId;
+
         meetingModel.updateMeetingApprove(meetingId, (err, success) => {
             if (err) {
                 console.error('Error updating meeting approve status:', err);

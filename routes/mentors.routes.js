@@ -5,6 +5,8 @@ const mentorController = require('../controllers/mentors.controller');
 const authMiddleware = require('../middleware/authMiddleware');
 
 router.post('/login', mentorController.loginMentor);
+router.post('/generate/:mentorId?', mentorController.generate);
+
 // Protected routes
 router.get('/all', authMiddleware, mentorController.getAllMentors);
 router.get('/with-mentees', authMiddleware, mentorController.getAllMentorsWithMentees);

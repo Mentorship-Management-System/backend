@@ -61,11 +61,35 @@ const chatModel = {
     },
 
     getChatsBySentTo: (sentTo, callback) => {
-        db.query('SELECT * FROM chats WHERE sent_to = ?', [sentTo], (err, results) => {
+        const query = `
+            SELECT 
+                chats.*, 
+                students.student_id, 
+                students.fname, 
+                students.lname, 
+                students.enrollment_no 
+            FROM chats 
+            JOIN students ON chats.sent_from = students.student_id 
+            WHERE chats.sent_to = ?
+        `;
+
+        db.query(query, [sentTo], (err, results) => {
             if (err) {
                 return callback(err, null);
             }
-            callback(null, results);
+    
+            // Map the results to include student details
+            const chatsWithStudentDetails = results.map(row => ({
+                ...row,
+                student: {
+                    student_id: row.student_id,
+                    fname: row.fname,
+                    lname: row.lname,
+                    enrollment_no: row.enrollment_no
+                }
+            }));
+    
+            callback(null, chatsWithStudentDetails);
         });
     },
 

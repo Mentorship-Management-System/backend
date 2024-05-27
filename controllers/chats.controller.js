@@ -30,7 +30,7 @@ const chatController = {
     },
 
     addChat: (req, res) => {
-        const chatData = req.body;
+        const chatData = {...req.body, date: new Date().toISOString(), time: "00:00"};
         chatModel.addChat(chatData, (err, chats) => {
             if (err) {
                 console.error('Error adding chat:', err);
@@ -82,7 +82,7 @@ const chatController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(200).json({ success: true, chats });
+            res.status(200).json({ success: true, chats: chats.reverse() });
         });
     },
 
@@ -94,7 +94,7 @@ const chatController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(200).json({ success: true, chats });
+            res.status(200).json({ success: true, chats: chats.reverse() });
         });
     },
 

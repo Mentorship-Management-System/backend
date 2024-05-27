@@ -1,5 +1,23 @@
 const studentModel = require('../models/student.model');
 const mentorModel = require('../models/mentor.model');
+const fs = require('fs');
+const crypto = require('crypto')
+
+// Function to generate random password
+const generateRandomPassword = (length) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let password = '';
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        password += characters.charAt(randomIndex);
+    }
+    return password;
+}
+
+const hashPassword = (password) => {
+    const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
+    return hashedPassword;
+}
 
 const mentorController = {
     loginMentor: (req, res) => {
@@ -20,6 +38,69 @@ const mentorController = {
             }
         });
     },
+
+    generate: (req, res) => {
+        const mentorId = req.params.mentorId;
+
+        const fetchMentors = mentorId 
+            ? mentorModel.getMentorById.bind(null, mentorId)
+            : mentorModel.getAllMentors;
+
+        fetchMentors((err, mentors) => {
+            let mentorsData = [];
+            if (err) {
+                console.error('Error fetching mentors:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+
+            console.log(mentors);
+            if(mentorId){
+                mentorsData = [mentors];
+            } else {
+                mentorsData = mentors;
+            }
+
+            if (!mentors || mentors.length === 0) {
+                res.status(404).json({ error: 'Mentor not found' });
+                return;
+            }
+
+            mentorsData.forEach(mentor => {
+                mentor.password = generateRandomPassword(8); // Change 8 to desired password length
+            });
+
+            const csvData = mentorsData.map(mentor => {
+                return `${mentor.mentor_id},${mentor.fname},${mentor.lname},${mentor.email},${mentor.password}`;
+            }).join('\n');
+
+            // Write data to a CSV file
+            fs.writeFile('./mentors.csv', csvData, (err) => {
+                if (err) {
+                    console.error('Error writing to CSV file:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
+                console.log('Mentor data has been written to mentors.csv');
+            });
+
+            mentorsData.forEach(mentor => {
+                mentor.hashedPassword = hashPassword(mentor.password); // Hash the password
+                delete mentor.password;
+            });
+
+            mentorModel.insertCredentials(mentorsData, (err, result) => {
+                if (err) {
+                    console.error('Error generating mentor credentials:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                } else {
+                    console.log('Mentor credentials generated successfully.');
+                    res.status(200).json({ success: true, result: mentorsData });
+                }
+            });
+        });
+    },
+
     getAllMentors: (req, res) => {
         mentorModel.getAllMentors((err, results) => {
             if (err) {
@@ -72,6 +153,7 @@ const mentorController = {
     updateMentor: (req, res) => {
         const mentorId = req.params.mentorId;
         const updatedMentor = req.body;
+
         mentorModel.updateMentor(mentorId, updatedMentor, (err, result) => {
             if (err) {
                 console.error('Error updating mentor:', err);
@@ -79,14 +161,13 @@ const mentorController = {
                 return;
             }
             if (result.affectedRows > 0) {
-                mentorModel.getMentorById(mentorId, (err, updatedResults) => {
+                mentorModel.getMentorById(mentorId, (err, updatedMentor) => {
                     if (err) {
                         console.error('Error fetching updated mentor:', err);
                         res.status(500).json({ error: 'Internal Server Error' });
                         return;
                     }
 
-                    const updatedMentor = updatedResults[0];
                     res.status(200).json({ message: 'Mentor updated successfully', mentor: updatedMentor });
                 });
             } else {

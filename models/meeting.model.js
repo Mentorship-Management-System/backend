@@ -62,15 +62,18 @@ const meetingModel = {
     },
 
     getMeetingsByMentorId: (mentorId, callback) => {
-        db.query('SELECT * FROM meetings WHERE mentor_id = ?', [mentorId], (err, results) => {
+        const query = 'SELECT * FROM meetings WHERE mentor_id = ?';
+        db.query(query, [mentorId], (err, results) => {
             if (err) {
                 return callback(err, null);
             }
+
             const meetingPromises = results.map(meeting => {
-                if(meeting.confirmation){
+                if (meeting.confirmation) {
                     return new Promise((resolve, reject) => {
                         const confirmedStudents = meeting.confirmation.split(',').map(id => id.trim());
-                        db.query('SELECT * FROM students WHERE student_id IN (?)', [confirmedStudents], (err, studentResults) => {
+                        const studentQuery = 'SELECT * FROM students WHERE student_id IN (?)';
+                        db.query(studentQuery, [confirmedStudents], (err, studentResults) => {
                             if (err) {
                                 reject(err);
                                 return;
@@ -80,7 +83,7 @@ const meetingModel = {
                         });
                     });
                 } else {
-                    return new Promise((resolve, reject) => {
+                    return new Promise((resolve) => {
                         meeting.confirmed_students = [];
                         resolve(meeting);
                     });
@@ -144,13 +147,14 @@ const meetingModel = {
     },
 
     updateMeetingApprove: (meetingId, callback) => {
-        db.query('UPDATE meetings SET approve = ? WHERE meeting_id = ?', [true, meetingId], (err, result) => {
+        const query = 'UPDATE meetings SET approve = ? WHERE meeting_id = ?';
+        db.query(query, [true, meetingId], (err, result) => {
             if (err) {
                 return callback(err);
             }
-          callback(null, result.affectedRows > 0);
+            callback(null, result.affectedRows > 0);
         });
-    }
+    },
 };
 
 module.exports = meetingModel;

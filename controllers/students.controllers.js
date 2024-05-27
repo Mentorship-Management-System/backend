@@ -121,7 +121,16 @@ const userController = {
                     }
 
                     const updatedStudent = updatedResults[0];
-                    res.status(200).json({ success: true, message: 'Student updated successfully', student: updatedStudent });
+                    const studentWithMentor = {
+                        ...updatedStudent,
+                        mentor: {
+                            mentor_id: updatedStudent.mentor_id,
+                            name: updatedStudent.mentor_name,
+                            email: updatedStudent.mentor_email,
+                            phone: updatedStudent.mentor_phone
+                        }
+                    };
+                    res.status(200).json({ success: true, message: 'Student updated successfully', student: studentWithMentor });
                 });
             } else {
                 res.status(404).json({ error: 'Student not found or no changes made' });
