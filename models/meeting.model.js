@@ -101,11 +101,32 @@ const meetingModel = {
     },
 
     getMeetingsByStudentIds: (studentIds, callback) => {
-        db.query('SELECT * FROM meetings WHERE FIND_IN_SET(?, student_ids)', [studentIds], (err, results) => {
+        const placeholders = studentIds.map(() => 'FIND_IN_SET(?, student_ids)').join(' OR ');
+        const query = `
+            SELECT m.*, mentor.*
+            FROM meetings m
+            JOIN mentors mentor ON m.mentor_id = mentor.mentor_id
+            WHERE ${placeholders}
+        `;
+    
+        db.query(query, studentIds, (err, results) => {
             if (err) {
                 return callback(err, null);
             }
-            callback(null, results);
+    
+            const meetings = results.map(result => ({
+                ...result,
+                mentor: {
+                    mentor_id: result.mentor_id,
+                    honorifics: result.honorifics,
+                    fname: result.fname,
+                    lname: result.lname,
+                    email: result.email,
+                    phone: result.phone
+                }
+            }));
+    
+            callback(null, meetings);
         });
     },
 

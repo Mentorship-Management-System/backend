@@ -60,7 +60,7 @@ const studentModel = {
             const student = results[0];
             const token = jwt.sign({ id: student.student_id, email: student.gsuite_id }, secretKey);
 
-            callback(null, { student, token });
+            callback(null, { user: student, token });
         });
     },
     searchStudents: (filter, callback) => {

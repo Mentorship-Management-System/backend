@@ -168,14 +168,14 @@ const meetingController = {
     },
 
     getMeetingsByStudentIds: (req, res) => {
-        const studentIds = req.params.studentIds;
+        const studentIds = req.params.studentIds.split(',').map(id => id.trim());
         meetingModel.getMeetingsByStudentIds(studentIds, (err, meetings) => {
             if (err) {
                 console.error('Error fetching meetings by student_ids:', err);
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(200).json({ success: true, meetings });
+            res.status(200).json({ success: true, meetings: meetings.reverse() });
         });
     },
 
