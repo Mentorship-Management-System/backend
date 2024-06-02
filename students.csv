@@ -1,3 +1,350 @@
-ST001,Dheeraj,Gogoi,csb20028@tezu.ac.in,5920EogS
-ST002,Sanjay,Das,csb20077@tezu.ac.in,vupOepZt
-ST003,Reehan,Sarmah,csb20083@tezu.ac.in,N8HwlwR6
+ST001,Dheeraj,Gogoi,csb20028@tezu.ac.in,E8NsUhzh
+ST002,Sanjay,Das,csb20077@tezu.ac.in,gx11PBmH
+ST003,Reehan,Sarmah,csb20083@tezu.ac.in,nKJ7O63I
+ST004,John,Doe,CSB20070@tezu.ac.in,gV260UoI
+ST005,Sasank,Nath,cse23001@tezu.ac.in,jxSQEgPG
+ST006,Debarshi,Sonowal,cse23002@tezu.ac.in,hyUxOkZp
+ST007,Partha,Pratim Bezbaruah,cse23004@tezu.ac.in,EgIol5Tn
+ST008,Himangsu,Borah,cse23005@tezu.ac.in,xMljsdpJ
+ST009,Unisha,Sarma,cse23006@tezu.ac.in,thqkQhPe
+ST010,Vandana,,cse23007@tezu.ac.in,4fhzLK7V
+ST011,Pr,Najas Mathew,cse23008@tezu.ac.in,5PEEYby1
+ST012,Sneha,Baro,cse23010@tezu.ac.in,phrgftTG
+ST013,Dibyajyoti,Deka,cse23011@tezu.ac.in,dCyuWCd4
+ST014,Rituparna,Barman,cse23012@tezu.ac.in,ai7K2RLX
+ST015,Sazid,Ahmed,cse23013@tezu.ac.in,niovP4T4
+ST016,Rupankita,Sarma,cse23014@tezu.ac.in,jc5rWDyV
+ST017,Manashjyoti,Boro,cse23015@tezu.ac.in,tsAQNAvB
+ST018,Dipsikha,Chetia,cse23016@tezu.ac.in,CuBIITBF
+ST019,Rituparna,Das,cse23017@tezu.ac.in,YMsNaIyB
+ST020,Roshan,Kharel,cse23018@tezu.ac.in,gwdsloV3
+ST021,Anamika,Ray,cse23019@tezu.ac.in,Ak88edFd
+ST022,Surajit,Dutta,cse23020@tezu.ac.in,wPtymq00
+ST023,Ayan,Jyotiraj Gohain Phukan,cse23021@tezu.ac.in,Y5PNCnV3
+ST024,Jnyanmonish,Das,csc23022@tezu.ac.in,PtJO3Eyi
+ST025,Madhurjya,Das,csc23023@tezu.ac.in,Tt2maAFX
+ST026,Anamika,,csc23024@tezu.ac.in,ZIhSXdbU
+ST027,Partha,Jyoti Cheleng,csc23025@tezu.ac.in,VZeP8Uw2
+ST028,Nisha,Borah,csc23026@tezu.ac.in,0RVZwf8f
+ST029,Kaushal,Rajkhungur Basumatary,csi23001@tezu.ac.in,8CEWIXXa
+ST030,Aijul,Hussain,csi23003@tezu.ac.in,6MvtTSSh
+ST031,Nabaneet,Basisth,csi23004@tezu.ac.in,wbXpG1Fm
+ST032,Aditya,Dutta,csi23005@tezu.ac.in,XAd7yD6v
+ST033,Shahid,Afridi Saikia,csi23006@tezu.ac.in,UCH4etnh
+ST034,Palash,Pratim Dutta,csi23007@tezu.ac.in,GlloYesV
+ST035,Nazmin,Nehar,csi23008@tezu.ac.in,FLJQJy9h
+ST036,Khyati,Chowdhury,csi23009@tezu.ac.in,f9G3CuMV
+ST037,Gyanateet,Dutta,csi23011@tezu.ac.in,aA5MmxLP
+ST038,Hirok,Jyoti Dewri,csi23013@tezu.ac.in,y5hBnzIh
+ST039,Joydeep,Sarkar,csi23014@tezu.ac.in,86IyuGtK
+ST040,Priyam,Pratim Saikia,csi23015@tezu.ac.in,azuL0MYc
+ST041,Denish,Sarma,csm23001@tezu.ac.in,hRNQ8yA3
+ST042,Mahargha,De,csm23003@tezu.ac.in,76wp1Ylo
+ST043,Swapnil,Das,csm23004@tezu.ac.in,trixW2Ah
+ST044,Suraj,Nepal,csm23005@tezu.ac.in,dDAf6qEy
+ST045,Nishanta,Kakati,csm23006@tezu.ac.in,p4qYCaZq
+ST046,Manoj,Chetry,csm23007@tezu.ac.in,KBrVIFrW
+ST047,Ripunjay,Choudhury,csm23008@tezu.ac.in,DG43ZDNt
+ST048,Chandan,Mishra,csm23009@tezu.ac.in,JrOLhi3C
+ST049,Abhilash,Chutia,csm23010@tezu.ac.in,ZOLRNJn0
+ST050,Akhilesh,Yadav,csm23011@tezu.ac.in,YJfWrSOW
+ST051,Bhargav,Pratim Sarma,csm23012@tezu.ac.in,gfzaySJp
+ST052,Daman,Singh,csm23013@tezu.ac.in,6FdU0lr4
+ST053,Anand,Kumar,csm23014@tezu.ac.in,9TGQVa8u
+ST054,Tarun,Bharat,csm23015@tezu.ac.in,MEhhIHJA
+ST055,Sushant,Singh,csm23016@tezu.ac.in,PRe3QfRv
+ST056,Nayanmoni,Baruah,csm23017@tezu.ac.in,VdYNsL42
+ST057,Egypta,Gogoi,csm23018@tezu.ac.in,1AqQYQRk
+ST058,Md,Minhajuddin Ansari,csm23019@tezu.ac.in,3Wm8i4OC
+ST059,Kaustav,Kumar Khanikar,csm23020@tezu.ac.in,LHtfqc2n
+ST060,Dibesh,Agarwal,csm23021@tezu.ac.in,PbDgVKsa
+ST061,Jyotiprakash,Boruah,csm23023@tezu.ac.in,RbuLZ9UK
+ST062,Bishal,Sharma,csm23024@tezu.ac.in,8jNy47ML
+ST063,Bhrigumoni,Das,csm23025@tezu.ac.in,Phr7Oimc
+ST064,Partha,Pratim Sarkar,csm23026@tezu.ac.in,rZvRfi2f
+ST065,Janardan,Sutradhar,csm23027@tezu.ac.in,SY7C29lC
+ST066,Jeet,Debnath,csm23028@tezu.ac.in,Dubh9eRx
+ST067,Saurabh,Bharali,csm23029@tezu.ac.in,hkBC2EmO
+ST068,Suraj,Krishna Kutum,csm23030@tezu.ac.in,CYSpnJMg
+ST069,Abhijit,Doloi,csm23031@tezu.ac.in,hKReQFPV
+ST070,Bhaskarjya,Raj Borgohain,csm23032@tezu.ac.in,9ciwMYFV
+ST071,Rana,Das,csm23033@tezu.ac.in,NnVHufd4
+ST072,Kumar,Aniket,csm23034@tezu.ac.in,vvowjYW8
+ST073,Sumsum,Gogoi,csm23036@tezu.ac.in,EDK9tA3K
+ST074,Abhinab,Paul,csm23037@tezu.ac.in,kqJ5A7bT
+ST075,Partha,Ranjan Borah,csm23038@tezu.ac.in,vaml5GON
+ST076,Parthajit,Konwer,csm23039@tezu.ac.in,3KyDqM6J
+ST077,Md,Arman Alam,csm23040@tezu.ac.in,pRSNJRIC
+ST078,Mainak,Chakraborty,csm23041@tezu.ac.in,3HlazHyb
+ST079,Dhiraj,Kumar Thakur,csm23042@tezu.ac.in,14YO0Zul
+ST080,Ayush,Bajpai,csm23043@tezu.ac.in,OHQMVotw
+ST081,Arpan,Neog,csm23044@tezu.ac.in,j1caCcTY
+ST082,Harsh,Bartariya,csm23045@tezu.ac.in,76VpPyd1
+ST083,Sanjukta,Handique,csm23046@tezu.ac.in,z6lbWlz0
+ST084,Biku,Sarkar,csm23047@tezu.ac.in,CsA1MSMe
+ST085,Dhruba,Newar,csm23048@tezu.ac.in,ReZo9mT2
+ST086,Aditya,Kumar,csm23049@tezu.ac.in,wSvPrytm
+ST087,Trolukya,Sonowal,csm23050@tezu.ac.in,bYXkd7dh
+ST088,Ashish,Sorahia,csm23052@tezu.ac.in,VFnsCsHA
+ST089,Shubham,Gupta,csm23053@tezu.ac.in,VXFAtPd0
+ST090,Bishal,Payeng,csm23054@tezu.ac.in,6au2s9Hu
+ST091,Bidit,Mazumdar,csm23055@tezu.ac.in,43Pt35xv
+ST092,Priya,Das,csm23056@tezu.ac.in,pqdMbLst
+ST093,Bhrigu,Moni Baruah,csm23057@tezu.ac.in,XdNQrUcN
+ST094,Debashis,Boruah,csm23058@tezu.ac.in,M8eQC905
+ST095,Punit,Lama,csm23059@tezu.ac.in,nj84MYRQ
+ST096,Ashim,Borah,csm23060@tezu.ac.in,gEtcQkYF
+ST097,Lakhya,Borah,csm23061@tezu.ac.in,atD7CkHL
+ST098,Kukil,Phukan,csm23062@tezu.ac.in,mCNFZzN7
+ST099,Papu,Bora,csb23201@tezu.ac.in,Y7gWXlzK
+ST100,Debasish,Newar,csb23202@tezu.ac.in,wz0RFIlI
+ST101,Hirak,Jyoti Nath,csb23203@tezu.ac.in,PgM2L0RM
+ST102,Irfan,Ansari,csb23204@tezu.ac.in,q5WxQAp6
+ST103,Rintu,Hazarika,csb23205@tezu.ac.in,TZt816kt
+ST104,Sanskrita,Bhuyan,csb23206@tezu.ac.in,e5ZO2Rwr
+ST105,Shaan, Pathak,csb23001@tezu.ac.in,aXCFfqRD
+ST106,Pragyan,Pratim Sharma,csb23002@tezu.ac.in,JnkQtaMD
+ST107,Antariksh, Saikia,csb23003@tezu.ac.in,D02p27Af
+ST108,Soumyadeep, Dutta,csb23004@tezu.ac.in,4Ymjh36q
+ST109,Seikh,Irfan Ali,csb23005@tezu.ac.in,QjXWi8np
+ST110,Clinton,Nayak Saikia,csb23006@tezu.ac.in,CMkn9zu7
+ST111,Riniki, Devi,csb23007@tezu.ac.in,MJ2Sor6Q
+ST112,Akash,Maucham Kalita,csb23008@tezu.ac.in,UJr1wtiX
+ST113,Konseng, Dutta,csb23009@tezu.ac.in,PdTgRlu4
+ST114,Kishan, Harlalka,csb23010@tezu.ac.in,I0ue6SnD
+ST115,Silpishikha, Borah,csb23011@tezu.ac.in,J1bDTpTN
+ST116,Rahul, Yadav,csb23012@tezu.ac.in,klr9ZOO4
+ST117,Rikideep, Das,csb23013@tezu.ac.in,jPTjqAaC
+ST118,Rahil, Kachari,csb23014@tezu.ac.in,ct2yt1aQ
+ST119,Debashis, Saikia,csb23015@tezu.ac.in,hWzqDW4O
+ST120,Ruknabh, Bhattacharyya,csb23016@tezu.ac.in,XS8ZPk7u
+ST121,Raktim,Ranjan Handique,csb23017@tezu.ac.in,tdXQP85f
+ST122,Swapnil, Kalita,csb23018@tezu.ac.in,U4F6vH1i
+ST123,Suman,Safiur Jaman,csb23019@tezu.ac.in,7Rdm5QwC
+ST124,Rytham, Dhamala,csb23020@tezu.ac.in,RkikrshS
+ST125,Kuldip, Kalita,csb23021@tezu.ac.in,hWZqPUHM
+ST126,Irfan,Aniruz Zaman,csb23022@tezu.ac.in,wNKMJOKp
+ST127,Hrishikesh, Gohain,csb23023@tezu.ac.in,JMnqpmqE
+ST128,Jonathan, Pegu,csb23024@tezu.ac.in,bbjsHr7V
+ST129,Yuvraj, Barman,csb23025@tezu.ac.in,OcbVh5Eg
+ST130,Abhijit, Roy,csb23026@tezu.ac.in,NRHdtUOK
+ST131,Digdarshan, Chutia,csb23027@tezu.ac.in,sOTRHJHG
+ST132,Anjan, Thakuria,csb23028@tezu.ac.in,FQ4M3IUs
+ST133,Ritika,Saha Mandal,csb23029@tezu.ac.in,SCxpZPD8
+ST134,Bidisha, Gogoi,csb23030@tezu.ac.in,GTQ7JDfr
+ST135,Suraj, Karmakar,csb23031@tezu.ac.in,DZdGoxIE
+ST136,Shyam,Kumar Baruah,csb23032@tezu.ac.in,J1w0oGV9
+ST137,Niruj,Nayan Saikia,csb23033@tezu.ac.in,PdLqkwgN
+ST138,Biki, Saikia,csb23034@tezu.ac.in,uXajCOSK
+ST139,Amartya, Das,csb23035@tezu.ac.in,1sYOyP8n
+ST140,Himanshu, Mushahary,csb23036@tezu.ac.in,XjKtbi23
+ST141,Pratyush,Pratim Hazarika,csb23037@tezu.ac.in,lr9anquO
+ST142,Mridupawan, Kashyap,csb23038@tezu.ac.in,6HzicyA2
+ST143,Sandipan, Roy,csb23039@tezu.ac.in,BU6B8uIc
+ST144,Yubraj, Sutradhar,csb23040@tezu.ac.in,e0oohMTB
+ST145,Suprio, Sarkar,csb23041@tezu.ac.in,sYilf4lw
+ST146,Anwesha, Saharia,csb23042@tezu.ac.in,VX3DtCZi
+ST147,Kawshtav, Hazarika,csb23043@tezu.ac.in,Cl3rc3r5
+ST148,Sagar, Gogoi,csb23044@tezu.ac.in,RRK0jTHp
+ST149,Jayanta,Bora,csb23045@tezu.ac.in,CJJjfiNs
+ST150,Raihan,Zakir Ahmed,csb23046@tezu.ac.in,6JHYBXfY
+ST151,Farhaz,Rahman,csb23047@tezu.ac.in,lM8MeeCf
+ST152,Pratyush,Chand Sharma,csb23048@tezu.ac.in,J204CwqG
+ST153,Sambhav,Jaiswal,csb23049@tezu.ac.in,SreEAVw1
+ST154,Ajay,Patel,csb23050@tezu.ac.in,lNAyjARP
+ST155,Mohit,Ranjan,csb23051@tezu.ac.in,nm1o9kZD
+ST156,Areesha,Khan,csb23052@tezu.ac.in,ZDCez5yJ
+ST157,Sadananda,Deori,csb23053@tezu.ac.in,1i8dAunD
+ST158,Akash,Jyoti Das,csb23054@tezu.ac.in,ZNi7BB2I
+ST159,Rajat,Kumar Jha,csb23055@tezu.ac.in,CVdwv0zj
+ST160,Rupansh,Mohan,csb23056@tezu.ac.in,1JGy0FzI
+ST161,Tumit,Dass,csb23057@tezu.ac.in,t3vfpMwF
+ST162,Suraj,Biswas,csb23058@tezu.ac.in,5qoNWb4W
+ST163,Gaurav,Raj,csb23059@tezu.ac.in,aP25yg8g
+ST164,Sonu,Kumar,csb23060@tezu.ac.in,mG0zfTGd
+ST165,Shayan,Chakraborty,csb23061@tezu.ac.in,jxbznfNz
+ST166,Sumit,Raj,csb23062@tezu.ac.in,0JAGwaMb
+ST167,Tanmay,Sarkar,csb23063@tezu.ac.in,w27NTtwB
+ST168,Ruhaan,Chaudhary,csb23064@tezu.ac.in,r3996xXA
+ST169,Samuel,Newmai,csb23065@tezu.ac.in,JChXT2yj
+ST170,Shubham,Maurya,csb23066@tezu.ac.in,DKaa5Lfx
+ST171,Tushar,Bhati,csb23067@tezu.ac.in,aCDKmKzz
+ST172,Aman,Kumar Raj,csb23068@tezu.ac.in,iZf0z3Pa
+ST173,Deepak,Kumar Pathak,csb23069@tezu.ac.in,3QDvakQ3
+ST174,Prem,Kumar,csb23070@tezu.ac.in,5W6LEh50
+ST175,Rohan,Bhaskar Kale,csb23071@tezu.ac.in,XpDluSuF
+ST176,Yajant,Nath Tripathi,csb23072@tezu.ac.in,4YUGthZW
+ST177,Darmez,Singh,csb23073@tezu.ac.in,TlwKJP53
+ST178,Sasank,Nath,cse23001@tezu.ac.in,qen3tz4B
+ST179,Debarshi,Sonowal,cse23002@tezu.ac.in,k6aEpROl
+ST180,Partha,Pratim Bezbaruah,cse23004@tezu.ac.in,9LYTZdRF
+ST181,Himangsu,Borah,cse23005@tezu.ac.in,j9vOkOOf
+ST182,Unisha,Sarma,cse23006@tezu.ac.in,PiyA4LCZ
+ST183,Vandana,,cse23007@tezu.ac.in,cV8f5v7T
+ST184,Pr,Najas Mathew,cse23008@tezu.ac.in,c8s6MTmx
+ST185,Sneha,Baro,cse23010@tezu.ac.in,0aRnsMoI
+ST186,Dibyajyoti,Deka,cse23011@tezu.ac.in,PTwlcZ72
+ST187,Rituparna,Barman,cse23012@tezu.ac.in,BDLM2qAr
+ST188,Sazid,Ahmed,cse23013@tezu.ac.in,HfXiVNAE
+ST189,Rupankita,Sarma,cse23014@tezu.ac.in,YKCWAkRj
+ST190,Manashjyoti,Boro,cse23015@tezu.ac.in,uaV1777t
+ST191,Dipsikha,Chetia,cse23016@tezu.ac.in,S1bHyyWL
+ST192,Rituparna,Das,cse23017@tezu.ac.in,8FE5qo48
+ST193,Roshan,Kharel,cse23018@tezu.ac.in,uzwomXBS
+ST194,Anamika,Ray,cse23019@tezu.ac.in,iFZeyPze
+ST195,Surajit,Dutta,cse23020@tezu.ac.in,ItQH1eZg
+ST196,Ayan,Jyotiraj Gohain Phukan,cse23021@tezu.ac.in,nrnDy2pc
+ST197,Jnyanmonish,Das,csc23022@tezu.ac.in,QhQ1476Y
+ST198,Madhurjya,Das,csc23023@tezu.ac.in,t3eWA5Yi
+ST199,Anamika,,csc23024@tezu.ac.in,ruAqwjP5
+ST200,Partha,Jyoti Cheleng,csc23025@tezu.ac.in,4EYtXrFv
+ST201,Nisha,Borah,csc23026@tezu.ac.in,ekbnNvyy
+ST202,Kaushal,Rajkhungur Basumatary,csi23001@tezu.ac.in,fb2Y2AS9
+ST203,Aijul,Hussain,csi23003@tezu.ac.in,iFNqbOoB
+ST204,Nabaneet,Basisth,csi23004@tezu.ac.in,gB6LJIK0
+ST205,Aditya,Dutta,csi23005@tezu.ac.in,cGpmIIGw
+ST206,Shahid,Afridi Saikia,csi23006@tezu.ac.in,0UZEmpq7
+ST207,Palash,Pratim Dutta,csi23007@tezu.ac.in,xyeEedwV
+ST208,Nazmin,Nehar,csi23008@tezu.ac.in,2bJ5VvHB
+ST209,Khyati,Chowdhury,csi23009@tezu.ac.in,ZnIYrBCb
+ST210,Gyanateet,Dutta,csi23011@tezu.ac.in,MjmxYbDs
+ST211,Hirok,Jyoti Dewri,csi23013@tezu.ac.in,bNFSgPCM
+ST212,Joydeep,Sarkar,csi23014@tezu.ac.in,A0CGFGmm
+ST213,Priyam,Pratim Saikia,csi23015@tezu.ac.in,z9sRqFh6
+ST214,Denish,Sarma,csm23001@tezu.ac.in,chOC9ym4
+ST215,Mahargha,De,csm23003@tezu.ac.in,B5sm54SF
+ST216,Swapnil,Das,csm23004@tezu.ac.in,ipy624D0
+ST217,Suraj,Nepal,csm23005@tezu.ac.in,9qF8DpA2
+ST218,Nishanta,Kakati,csm23006@tezu.ac.in,ZGrxIxuY
+ST219,Manoj,Chetry,csm23007@tezu.ac.in,ZPuCPp2u
+ST220,Ripunjay,Choudhury,csm23008@tezu.ac.in,N2OqbNVm
+ST221,Chandan,Mishra,csm23009@tezu.ac.in,boVYewgh
+ST222,Abhilash,Chutia,csm23010@tezu.ac.in,f8aFaa3U
+ST223,Akhilesh,Yadav,csm23011@tezu.ac.in,9yxqBjXz
+ST224,Bhargav,Pratim Sarma,csm23012@tezu.ac.in,N6dTEBoM
+ST225,Daman,Singh,csm23013@tezu.ac.in,cX1RrQ2I
+ST226,Anand,Kumar,csm23014@tezu.ac.in,x3OteHsE
+ST227,Tarun,Bharat,csm23015@tezu.ac.in,IbG4zRFU
+ST228,Sushant,Singh,csm23016@tezu.ac.in,u3Oautdh
+ST229,Nayanmoni,Baruah,csm23017@tezu.ac.in,I1QtpL2k
+ST230,Egypta,Gogoi,csm23018@tezu.ac.in,QiOuQzev
+ST231,Md,Minhajuddin Ansari,csm23019@tezu.ac.in,ZYIeFX0A
+ST232,Kaustav,Kumar Khanikar,csm23020@tezu.ac.in,tRSm057E
+ST233,Dibesh,Agarwal,csm23021@tezu.ac.in,XOItIEtN
+ST234,Jyotiprakash,Boruah,csm23023@tezu.ac.in,eUJ5Dj8V
+ST235,Bishal,Sharma,csm23024@tezu.ac.in,nvz5k037
+ST236,Bhrigumoni,Das,csm23025@tezu.ac.in,ciWmfGcT
+ST237,Partha,Pratim Sarkar,csm23026@tezu.ac.in,73xV9HZ6
+ST238,Janardan,Sutradhar,csm23027@tezu.ac.in,WO9VuOe7
+ST239,Jeet,Debnath,csm23028@tezu.ac.in,T6USOV5H
+ST240,Saurabh,Bharali,csm23029@tezu.ac.in,UPvN1JAH
+ST241,Suraj,Krishna Kutum,csm23030@tezu.ac.in,tnlrUr7c
+ST242,Abhijit,Doloi,csm23031@tezu.ac.in,RaZt2ezJ
+ST243,Bhaskarjya,Raj Borgohain,csm23032@tezu.ac.in,LNrfbtoP
+ST244,Rana,Das,csm23033@tezu.ac.in,ilJr3KRk
+ST245,Kumar,Aniket,csm23034@tezu.ac.in,XGynY5PI
+ST246,Sumsum,Gogoi,csm23036@tezu.ac.in,GEq1Cy7x
+ST247,Abhinab,Paul,csm23037@tezu.ac.in,F4GZOgNL
+ST248,Partha,Ranjan Borah,csm23038@tezu.ac.in,WpMx9W7F
+ST249,Parthajit,Konwer,csm23039@tezu.ac.in,3X6apGpq
+ST250,Md,Arman Alam,csm23040@tezu.ac.in,ORwFslRY
+ST251,Mainak,Chakraborty,csm23041@tezu.ac.in,st28mW0Q
+ST252,Dhiraj,Kumar Thakur,csm23042@tezu.ac.in,mrVnOIEr
+ST253,Ayush,Bajpai,csm23043@tezu.ac.in,GlDNUvbJ
+ST254,Arpan,Neog,csm23044@tezu.ac.in,sdKYZF8J
+ST255,Harsh,Bartariya,csm23045@tezu.ac.in,fJc8BwOG
+ST256,Sanjukta,Handique,csm23046@tezu.ac.in,LOHT9uzf
+ST257,Biku,Sarkar,csm23047@tezu.ac.in,Cz63hRdT
+ST258,Dhruba,Newar,csm23048@tezu.ac.in,sGrYce5R
+ST259,Aditya,Kumar,csm23049@tezu.ac.in,d6yeu4CG
+ST260,Trolukya,Sonowal,csm23050@tezu.ac.in,vamovfLO
+ST261,Ashish,Sorahia,csm23052@tezu.ac.in,BZKIzYkz
+ST262,Shubham,Gupta,csm23053@tezu.ac.in,hv8uEdzx
+ST263,Bishal,Payeng,csm23054@tezu.ac.in,aSFzpGLX
+ST264,Bidit,Mazumdar,csm23055@tezu.ac.in,TO9q5zRl
+ST265,Priya,Das,csm23056@tezu.ac.in,ddjYAzJG
+ST266,Bhrigu,Moni Baruah,csm23057@tezu.ac.in,M84Lxrnh
+ST267,Debashis,Boruah,csm23058@tezu.ac.in,M77op0mu
+ST268,Punit,Lama,csm23059@tezu.ac.in,X7TdL0l7
+ST269,Ashim,Borah,csm23060@tezu.ac.in,HPdsJ4h2
+ST270,Lakhya,Borah,csm23061@tezu.ac.in,FvPQVMJQ
+ST271,Kukil,Phukan,csm23062@tezu.ac.in,9DQf3sLA
+ST272,Papu,Bora,csb23201@tezu.ac.in,2Gmjd1Zz
+ST273,Debasish,Newar,csb23202@tezu.ac.in,BSEVQX9b
+ST274,Hirak,Jyoti Nath,csb23203@tezu.ac.in,NyepDVWe
+ST275,Irfan,Ansari,csb23204@tezu.ac.in,cb8maksD
+ST276,Rintu,Hazarika,csb23205@tezu.ac.in,YDk5W7hK
+ST277,Sanskrita,Bhuyan,csb23206@tezu.ac.in,oavr0gVz
+ST278,Shaan, Pathak,csb23001@tezu.ac.in,YUm9cXFk
+ST279,Pragyan,Pratim Sharma,csb23002@tezu.ac.in,HKgdEFe0
+ST280,Antariksh, Saikia,csb23003@tezu.ac.in,mjqTXlkV
+ST281,Soumyadeep, Dutta,csb23004@tezu.ac.in,stTWKqzI
+ST282,Seikh,Irfan Ali,csb23005@tezu.ac.in,qeSUAtnL
+ST283,Clinton,Nayak Saikia,csb23006@tezu.ac.in,wpzC56EP
+ST284,Riniki, Devi,csb23007@tezu.ac.in,HhrAW1ot
+ST285,Akash,Maucham Kalita,csb23008@tezu.ac.in,PauLtcNF
+ST286,Konseng, Dutta,csb23009@tezu.ac.in,5x5uH78b
+ST287,Kishan, Harlalka,csb23010@tezu.ac.in,pGW47xT6
+ST288,Silpishikha, Borah,csb23011@tezu.ac.in,o0jA47J1
+ST289,Rahul, Yadav,csb23012@tezu.ac.in,tebRpT7G
+ST290,Rikideep, Das,csb23013@tezu.ac.in,UfzyoVoZ
+ST291,Rahil, Kachari,csb23014@tezu.ac.in,tkjq1zxH
+ST292,Debashis, Saikia,csb23015@tezu.ac.in,rQiFtsEO
+ST293,Ruknabh, Bhattacharyya,csb23016@tezu.ac.in,3TvhOWeL
+ST294,Raktim,Ranjan Handique,csb23017@tezu.ac.in,xsmXU0il
+ST295,Swapnil, Kalita,csb23018@tezu.ac.in,ZiiYtwWV
+ST296,Suman,Safiur Jaman,csb23019@tezu.ac.in,56WzAuJP
+ST297,Rytham, Dhamala,csb23020@tezu.ac.in,GgXPDhMb
+ST298,Kuldip, Kalita,csb23021@tezu.ac.in,O3ctaiV9
+ST299,Irfan,Aniruz Zaman,csb23022@tezu.ac.in,3Djdvh7E
+ST300,Hrishikesh, Gohain,csb23023@tezu.ac.in,pEIZXNNz
+ST301,Jonathan, Pegu,csb23024@tezu.ac.in,GyNPjz4l
+ST302,Yuvraj, Barman,csb23025@tezu.ac.in,gt9r95dg
+ST303,Abhijit, Roy,csb23026@tezu.ac.in,fJ3b8HWW
+ST304,Digdarshan, Chutia,csb23027@tezu.ac.in,qXbWCmmF
+ST305,Anjan, Thakuria,csb23028@tezu.ac.in,fTeaqxOE
+ST306,Ritika,Saha Mandal,csb23029@tezu.ac.in,94QZvIgv
+ST307,Bidisha, Gogoi,csb23030@tezu.ac.in,SC8RPyJc
+ST308,Suraj, Karmakar,csb23031@tezu.ac.in,JNq0m2Ue
+ST309,Shyam,Kumar Baruah,csb23032@tezu.ac.in,iSh7aevR
+ST310,Niruj,Nayan Saikia,csb23033@tezu.ac.in,l1ehnc8U
+ST311,Biki, Saikia,csb23034@tezu.ac.in,rkG738F1
+ST312,Amartya, Das,csb23035@tezu.ac.in,AGivU5Ci
+ST313,Himanshu, Mushahary,csb23036@tezu.ac.in,Dqn1LO4Q
+ST314,Pratyush,Pratim Hazarika,csb23037@tezu.ac.in,BZXLSA5t
+ST315,Mridupawan, Kashyap,csb23038@tezu.ac.in,ityXwFfY
+ST316,Sandipan, Roy,csb23039@tezu.ac.in,qawT5DJz
+ST317,Yubraj, Sutradhar,csb23040@tezu.ac.in,d1nN3LyZ
+ST318,Suprio, Sarkar,csb23041@tezu.ac.in,080gm0aI
+ST319,Anwesha, Saharia,csb23042@tezu.ac.in,o7BQGNZW
+ST320,Kawshtav, Hazarika,csb23043@tezu.ac.in,khNN2Oi4
+ST321,Sagar, Gogoi,csb23044@tezu.ac.in,wMjDtr3U
+ST322,Jayanta,Bora,csb23045@tezu.ac.in,yHmlEFI8
+ST323,Raihan,Zakir Ahmed,csb23046@tezu.ac.in,tr8fsGNL
+ST324,Farhaz,Rahman,csb23047@tezu.ac.in,FZDkIARJ
+ST325,Pratyush,Chand Sharma,csb23048@tezu.ac.in,iaDNCgoS
+ST326,Sambhav,Jaiswal,csb23049@tezu.ac.in,hWnP5H6v
+ST327,Ajay,Patel,csb23050@tezu.ac.in,saqM50vZ
+ST328,Mohit,Ranjan,csb23051@tezu.ac.in,7pfTCm4A
+ST329,Areesha,Khan,csb23052@tezu.ac.in,jjGaTkTJ
+ST330,Sadananda,Deori,csb23053@tezu.ac.in,DOSti5BJ
+ST331,Akash,Jyoti Das,csb23054@tezu.ac.in,d2IXUNZw
+ST332,Rajat,Kumar Jha,csb23055@tezu.ac.in,Cse3m7kq
+ST333,Rupansh,Mohan,csb23056@tezu.ac.in,bnZw5sgL
+ST334,Tumit,Dass,csb23057@tezu.ac.in,LwP2SbrL
+ST335,Suraj,Biswas,csb23058@tezu.ac.in,Qc8HXwWW
+ST336,Gaurav,Raj,csb23059@tezu.ac.in,dgTaeGk5
+ST337,Sonu,Kumar,csb23060@tezu.ac.in,EWdlTszo
+ST338,Shayan,Chakraborty,csb23061@tezu.ac.in,uvJdfS7W
+ST339,Sumit,Raj,csb23062@tezu.ac.in,Ws6tahdW
+ST340,Tanmay,Sarkar,csb23063@tezu.ac.in,UGRqVpPQ
+ST341,Ruhaan,Chaudhary,csb23064@tezu.ac.in,EydrNXbH
+ST342,Samuel,Newmai,csb23065@tezu.ac.in,F76LJKMB
+ST343,Shubham,Maurya,csb23066@tezu.ac.in,65AaRu7r
+ST344,Tushar,Bhati,csb23067@tezu.ac.in,R3glet43
+ST345,Aman,Kumar Raj,csb23068@tezu.ac.in,gzPgI6tx
+ST346,Deepak,Kumar Pathak,csb23069@tezu.ac.in,eM4Kgot7
+ST347,Prem,Kumar,csb23070@tezu.ac.in,lae2S4Hj
+ST348,Rohan,Bhaskar Kale,csb23071@tezu.ac.in,Mv8jCGyx
+ST349,Yajant,Nath Tripathi,csb23072@tezu.ac.in,LWE6Eawr
+ST350,Darmez,Singh,csb23073@tezu.ac.in,JZxXqzJX

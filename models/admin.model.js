@@ -42,6 +42,30 @@ const adminModel = {
 
         db.query(query, [values], callback);
     },
+
+    getCounts: (callback) => {
+        const query = `
+            SELECT 
+                (SELECT COUNT(*) FROM mentors) AS mentorCount,
+                (SELECT COUNT(*) FROM students) AS studentCount
+        `;
+        db.query(query, (err, results) => {
+            if (err) {
+                return callback(err, null);
+            }
+            callback(null, results[0]);
+        });
+    },
+
+    resetPassword: (email, hashedPassword, callback) => {
+        const query = 'UPDATE credentials SET password = ? WHERE email = ?';
+        db.query(query, [hashedPassword, email], (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, results.affectedRows > 0);
+        });
+    }
 };
 
 module.exports = adminModel;

@@ -37,7 +37,7 @@ const chatController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(201).json({ success: true, message: 'Chat added successfully', chats });
+            res.status(201).json({ success: true, message: 'Chat added successfully', chats: chats.reverse() });
         });
     },
 

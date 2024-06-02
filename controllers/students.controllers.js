@@ -368,40 +368,47 @@ const userController = {
     },
 
     generate: (req, res) => {
-        let studentsData = req.body.students;
-
-        studentsData.forEach(admin => {
-            admin.password = generateRandomPassword(8); // Change 8 to desired password length
-        });
-
-        const csvData = studentsData.map(student => {
-            return `${student.student_id},${student.fname},${student.lname},${student.gsuite_id},${student.password}`;
-        }).join('\n');
-        
-        // Write data to a CSV file
-        fs.writeFile('./students.csv', csvData, (err) => {
+        studentModel.getAllStudents((err, studentsData) => {
             if (err) {
-                console.error('Error writing to CSV file:', err);
+                console.error('Error fetching students:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            console.log('Student data has been written to students.csv');
+    
+            studentsData.forEach(student => {
+                student.password = generateRandomPassword(8); // Change 8 to desired password length
+            });
+    
+            const csvData = studentsData.map(student => {
+                return `${student.student_id},${student.fname},${student.lname},${student.gsuite_id},${student.password}`;
+            }).join('\n');
+            
+            // Write data to a CSV file
+            fs.writeFile('./students.csv', csvData, (err) => {
+                if (err) {
+                    console.error('Error writing to CSV file:', err);
+                    return;
+                }
+                console.log('Student data has been written to students.csv');
+            });
+    
+            studentsData.forEach(student => {
+                student.hashedPassword = hashPassword(student.password); // Hash the password
+                delete student.password;
+            });
+    
+            studentModel.insertCredentials(studentsData, (err, result) => {
+                if (err) {
+                    console.error('Error generating student credentials:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                } else {
+                    console.log('Student credentials generated successfully.');
+                    res.status(200).json({ success: true, result: studentsData });
+                }
+            });
         });
-
-        studentsData.forEach(student => {
-            student.hashedPassword = hashPassword(student.password); // Hash the password
-            delete student.password;
-        });
-
-        studentModel.insertCredentials(studentsData, (err, result) => {
-            if (err) {
-                console.error('Error generating student credentials:', err);
-                res.status(500).json({ error: 'Internal Server Error' });
-            } else {
-                console.log('Student credentials generated successfully.');
-                res.status(200).json({ success: true, result: studentsData });
-            }
-        });
-    },
+    }
+    ,
 
     getStudentsByMentorId: (req, res) => {
         const mentor_id = req.params.mentorId;
@@ -414,6 +421,89 @@ const userController = {
             res.status(200).json({ success: true, students: results });
         });
     },
+
+    saveSemesterDetails: (req, res) => {
+        const semesterDetails = req.body;
+
+        if (!Array.isArray(semesterDetails) || semesterDetails.length === 0) {
+            return res.status(400).json({ error: 'Payload should be a non-empty array' });
+        }
+
+        // Validation check for each object in the array
+        for (const detail of semesterDetails) {
+            if (!detail.enrollment_no || !detail.semester || !detail.sgpa) {
+                return res.status(400).json({ error: 'Each object must have enrollment_no, semester, and sgpa fields' });
+            }
+        }
+
+        studentModel.saveSemesterDetails(semesterDetails, (err, result) => {
+            if (err) {
+                console.error('Error saving semester details:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+            res.status(200).json({ success: true, message: 'Semester details saved successfully' });
+        });
+    },
+
+    getSgpasByEnrollmentNo: (req, res) => {
+        const enrollmentNo = req.params.enrollment_no;
+    
+        studentModel.getSgpasByEnrollmentNo(enrollmentNo)
+            .then((sgpas) => {
+                res.status(200).json({ success: true, sgpas });
+            })
+            .catch((err) => {
+                console.error('Error fetching SGPA details:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            });
+    },
+
+    saveSgpa: async (req, res) => {
+        try {
+            const sgpas = req.body;
+            const enrollmentNo = sgpas[0].enrollment_no; // Assuming all sgpas are for the same enrollment_no
+    
+            // Fetch current SGPA records
+            const currentSgpas = await studentModel.getSgpasByEnrollmentNo(enrollmentNo);
+            const sgpaMap = currentSgpas.reduce((acc, sgpa) => {
+                acc[sgpa.semester] = sgpa.sgpa;
+                return acc;
+            }, {});
+    
+            let updates = [];
+            let inserts = [];
+            let unchanged = [];
+    
+            // Compare and determine updates or inserts
+            sgpas.forEach(sgpa => {
+                if (sgpaMap[sgpa.semester] === undefined) {
+                    inserts.push(sgpa);
+                } else if (sgpaMap[sgpa.semester] !== sgpa.sgpa) {
+                    updates.push(sgpa);
+                } else {
+                    unchanged.push(sgpa);
+                }
+            });
+    
+            if (updates.length === 0 && inserts.length === 0) {
+                return res.status(200).json({ message: 'No changes detected to update or insert.' });
+            }
+    
+            if (updates.length > 0) {
+                await studentModel.updateSgpas(updates);
+            }
+    
+            if (inserts.length > 0) {
+                await studentModel.insertSgpas(inserts);
+            }
+    
+            res.status(200).json({ success: true, updated: updates.length, inserted: inserts.length, unchanged: unchanged.length });
+    
+        } catch (error) {
+            console.error('Error saving SGPA:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    }
 };
 
 module.exports = userController;

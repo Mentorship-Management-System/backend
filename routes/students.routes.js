@@ -12,7 +12,11 @@ router.post('/add', authMiddleware, studentsController.addStudent);
 router.post('/insert_students', studentsController.insertStudents);
 router.post('/search', authMiddleware, studentsController.searchStudents);
 router.get('/available-mentees', authMiddleware, studentsController.getAvailableMentees);
+router.get('/sgpa/:enrollment_no', studentsController.getSgpasByEnrollmentNo);
 router.post('/assign-mentees', authMiddleware, studentsController.assignMenteesToMentor);
+
+router.post('/saveSemesterDetails', authMiddleware, studentsController.saveSemesterDetails);
+router.post('/save-sgpa', authMiddleware, studentsController.saveSgpa);
 
 router.get('/mentor/:mentorIndex', authMiddleware, studentsController.getStudentsByMentorIndex);
 router.get('/:rollno', authMiddleware, studentsController.getStudentById);

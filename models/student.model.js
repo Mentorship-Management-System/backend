@@ -202,7 +202,83 @@ const studentModel = {
             }
             callback(null, results);
         });
-    }
+    },
+
+    saveSemesterDetails: (semesterDetails, callback) => {
+        const values = semesterDetails.map(detail => [detail.enrollment_no, detail.semester, detail.sgpa]);
+        const query = 'INSERT INTO sgpas (enrollment_no, semester, sgpa) VALUES ?';
+
+        db.query(query, [values], (err, result) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, result);
+        });
+    },
+
+    getSgpasByEnrollmentNo: (enrollmentNo, callback) => {
+        const query = 'SELECT * FROM sgpas WHERE enrollment_no = ?';
+        db.query(query, [enrollmentNo], (err, results) => {
+            if (err) {
+                return callback(err, null);
+            }
+            callback(null, results);
+        });
+    },
+
+    getSgpasByEnrollmentNo: (enrollmentNo) => {
+        return new Promise((resolve, reject) => {
+            db.query('SELECT * FROM sgpas WHERE enrollment_no = ?', [enrollmentNo], (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                console.log(results);
+                if (results.length === 0) {
+                    resolve([]);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+    },
+    
+    updateSgpas: (updates) => {
+        const updateQueries = updates.map(sgpa => {
+            return new Promise((resolve, reject) => {
+                db.query(
+                    'UPDATE sgpas SET sgpa = ? WHERE enrollment_no = ? AND semester = ?',
+                    [sgpa.sgpa, sgpa.enrollment_no, sgpa.semester],
+                    (err, results) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(results);
+                    }
+                );
+            });
+        });
+    
+        return Promise.all(updateQueries);
+    },
+    
+    insertSgpas: (inserts) => {
+        const insertQueries = inserts.map(sgpa => {
+            return new Promise((resolve, reject) => {
+                db.query(
+                    'INSERT INTO sgpas (enrollment_no, semester, sgpa) VALUES (?, ?, ?)',
+                    [sgpa.enrollment_no, sgpa.semester, sgpa.sgpa],
+                    (err, results) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(results);
+                    }
+                );
+            });
+        });
+    
+        return Promise.all(insertQueries);
+    },
 };
 
 module.exports = studentModel;

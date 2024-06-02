@@ -134,6 +134,31 @@ const adminController = {
                 });
             });
         });
+    },
+
+    getCounts: (req, res) => {
+        adminModel.getCounts((err, counts) => {
+            if (err) {
+                console.error('Error fetching counts:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+            res.status(200).json({ success: true, counts });
+        });
+    },
+
+    resetPassword: (req, res) => {
+        const { email, newPassword } = req.body;
+        const hashedPassword = hashPassword(newPassword);
+    
+        adminModel.resetPassword(email, hashedPassword, (err, result) => {
+            if (err) {
+                console.error('Error resetting mentor password:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            } else {
+                res.status(200).json({ success: true, message: 'Password reset successfully' });
+            }
+        });
     }
 };
 
