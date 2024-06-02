@@ -171,6 +171,46 @@ const MentorModel = {
 
         db.query(query, [values], callback);
     },
+
+    deleteMentorsProfile: (mentorIds, callback) => {
+        db.beginTransaction((err) => {
+            if (err) {
+                return callback(err, null);
+            }
+    
+            // Convert mentorIds to an array if it's a single ID
+            if (!Array.isArray(mentorIds)) {
+                mentorIds = [mentorIds];
+            }
+    
+            // Delete corresponding records from credentials table
+            db.query('DELETE FROM credentials WHERE email IN (SELECT email FROM mentors WHERE mentor_id IN (?))', [mentorIds], (err, result) => {
+                if (err) {
+                    return db.rollback(() => {
+                        callback(err, null);
+                    });
+                }
+    
+                // Delete records from students table
+                db.query('DELETE FROM mentors WHERE mentor_id IN (?)', [mentorIds], (err, result) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            callback(err, null);
+                        });
+                    }
+    
+                    db.commit((err) => {
+                        if (err) {
+                            return db.rollback(() => {
+                                callback(err, null);
+                            });
+                        }
+                        callback(null, result);
+                    });
+                });
+            });
+        });
+    } 
 };
 
 module.exports = MentorModel;

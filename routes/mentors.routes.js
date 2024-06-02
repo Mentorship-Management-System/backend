@@ -17,6 +17,7 @@ router.get('/:mentorIndex/mentees', authMiddleware, mentorController.getMenteesB
 router.post('/add', authMiddleware, mentorController.addMentor);
 router.put('/update/:mentorId', authMiddleware, mentorController.updateMentor);
 router.delete('/delete/:mentorId', authMiddleware, mentorController.deleteMentor);
+router.delete('/delete-mentors-profile', authMiddleware, mentorController.deleteMentorsProfile);
 router.post('/insert', authMiddleware, mentorController.insertMentors);
 
 router.patch('/:mentorId/updateAvailability', mentorController.updateMentorAvailability);

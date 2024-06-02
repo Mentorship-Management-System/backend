@@ -503,7 +503,30 @@ const userController = {
             console.error('Error saving SGPA:', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
-    }
+    },
+
+    deleteStudentsProfile: (req, res) => {
+        const studentIds = req.body.studentIds;
+        console.log(studentIds);
+
+        studentModel.deleteStudentsProfile(studentIds, (err, result) => {
+            if (err) {
+                console.error('Error deleting students:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+
+            // If deletion is successful, fetch the updated list of all students
+            studentModel.getAllStudents((err, students) => {
+                if (err) {
+                    console.error('Error fetching students:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
+                res.status(200).json({ success: true, students });
+            });
+        });
+    },
 };
 
 module.exports = userController;

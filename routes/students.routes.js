@@ -21,7 +21,8 @@ router.post('/save-sgpa', authMiddleware, studentsController.saveSgpa);
 router.get('/mentor/:mentorIndex', authMiddleware, studentsController.getStudentsByMentorIndex);
 router.get('/:rollno', authMiddleware, studentsController.getStudentById);
 router.put('/:rollno', authMiddleware, studentsController.updateStudent);
-router.delete('/:rollno', authMiddleware, studentsController.deleteStudent);
+router.delete('/delete/:rollno', authMiddleware, studentsController.deleteStudent);
+router.delete('/delete-students-profile', authMiddleware, studentsController.deleteStudentsProfile);
 router.get('/:enrollmentNo/with-mentor', authMiddleware, studentsController.getStudentWithMentorDetails);
 
 

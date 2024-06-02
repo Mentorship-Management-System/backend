@@ -393,6 +393,29 @@ const mentorController = {
             }
         });
     },
+
+    deleteMentorsProfile: (req, res) => {
+        const mentorIds = req.body.mentorIds;
+        console.log(mentorIds);
+
+        mentorModel.deleteMentorsProfile(mentorIds, (err, result) => {
+            if (err) {
+                console.error('Error deleting students:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+
+            // If deletion is successful, fetch the updated list of all students
+            mentorModel.getAllMentors((err, mentors) => {
+                if (err) {
+                    console.error('Error fetching mentors:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
+                res.status(200).json({ success: true, mentors });
+            });
+        });
+    }
 };
 
 module.exports = mentorController;

@@ -279,6 +279,46 @@ const studentModel = {
     
         return Promise.all(insertQueries);
     },
+
+    deleteStudentsProfile: (studentIds, callback) => {
+        db.beginTransaction((err) => {
+            if (err) {
+                return callback(err, null);
+            }
+    
+            // Convert studentIds to an array if it's a single ID
+            if (!Array.isArray(studentIds)) {
+                studentIds = [studentIds];
+            }
+    
+            // Delete corresponding records from credentials table
+            db.query('DELETE FROM credentials WHERE email IN (SELECT gsuite_id FROM students WHERE student_id IN (?))', [studentIds], (err, result) => {
+                if (err) {
+                    return db.rollback(() => {
+                        callback(err, null);
+                    });
+                }
+    
+                // Delete records from students table
+                db.query('DELETE FROM students WHERE student_id IN (?)', [studentIds], (err, result) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            callback(err, null);
+                        });
+                    }
+    
+                    db.commit((err) => {
+                        if (err) {
+                            return db.rollback(() => {
+                                callback(err, null);
+                            });
+                        }
+                        callback(null, result);
+                    });
+                });
+            });
+        });
+    }    
 };
 
 module.exports = studentModel;
