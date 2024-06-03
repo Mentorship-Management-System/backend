@@ -159,6 +159,29 @@ const adminController = {
                 res.status(200).json({ success: true, message: 'Password reset successfully' });
             }
         });
+    },
+
+    deleteAdminsProfile: (req, res) => {
+        const adminIds = req.body.adminIds;
+        console.log(adminIds);
+
+        adminModel.deleteAdminsProfile(adminIds, (err, result) => {
+            if (err) {
+                console.error('Error deleting admins:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+
+            // If deletion is successful, fetch the updated list of all students
+            adminModel.getAllAdmins((err, admins) => {
+                if (err) {
+                    console.error('Error fetching admins:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
+                res.status(200).json({ success: true, admins });
+            });
+        });
     }
 };
 

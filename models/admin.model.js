@@ -65,7 +65,47 @@ const adminModel = {
             }
             callback(null, results.affectedRows > 0);
         });
-    }
+    },
+
+    deleteAdminsProfile: (adminIds, callback) => {
+        db.beginTransaction((err) => {
+            if (err) {
+                return callback(err, null);
+            }
+    
+            // Convert adminIds to an array if it's a single ID
+            if (!Array.isArray(adminIds)) {
+                adminIds = [adminIds];
+            }
+    
+            // Delete corresponding records from credentials table
+            db.query('DELETE FROM credentials WHERE email IN (SELECT email FROM admins WHERE admin_id IN (?))', [adminIds], (err, result) => {
+                if (err) {
+                    return db.rollback(() => {
+                        callback(err, null);
+                    });
+                }
+    
+                // Delete records from students table
+                db.query('DELETE FROM admins WHERE admin_id IN (?)', [adminIds], (err, result) => {
+                    if (err) {
+                        return db.rollback(() => {
+                            callback(err, null);
+                        });
+                    }
+    
+                    db.commit((err) => {
+                        if (err) {
+                            return db.rollback(() => {
+                                callback(err, null);
+                            });
+                        }
+                        callback(null, result);
+                    });
+                });
+            });
+        });
+    } 
 };
 
 module.exports = adminModel;

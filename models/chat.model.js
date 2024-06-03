@@ -93,8 +93,8 @@ const chatModel = {
         });
     },
 
-    updateAcknowledgedById: (chatId, callback) => {
-        db.query('UPDATE chats SET acknowledged = ? WHERE chat_id = ?', [true, chatId], (err, result) => {
+    updateAcknowledgedById: (chatId, meetingId, callback) => {
+        db.query('UPDATE chats SET acknowledged = ?, meeting_id = ? WHERE chat_id = ?', [true, meetingId, chatId], (err, result) => {
             if (err) {
                 return callback(err);
             }

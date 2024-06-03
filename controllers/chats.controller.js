@@ -100,7 +100,7 @@ const chatController = {
 
     updateAcknowledgedById: (req, res) => {
         const chatId = req.params.chatId;
-        chatModel.updateAcknowledgedById(chatId, (err, success) => {
+        chatModel.updateAcknowledgedById(chatId, null, (err, success) => {
             if (err) {
                 console.error('Error updating acknowledged field:', err);
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -116,7 +116,7 @@ const chatController = {
 
     acknowledgeByMeeting: (req, res) => {
         const chatId = req.params.chatId;
-        const { meeting_date, meeting_time } = req.body;
+        const { meeting_date } = req.body;
         chatModel.getChatById(chatId, (err, chat) => {
             if (err) {
                 console.error('Error fetching chat by ID:', err);
@@ -133,26 +133,28 @@ const chatController = {
                 title: `Acknowledgement Meeting`,
                 description: `Meeting set for - ${chat.message}`,
                 date: meeting_date,
-                time: meeting_time,
+                // time: meeting_time,
                 mentor_id: chat.sent_to,
                 student_ids: chat.sent_from
             };
             // console.log("Meeting Data", meetingData);
-            meetingModel.addMeeting(meetingData, (err, meeting) => {
+            meetingModel.addMeeting(meetingData, (err, meetings) => {
                 if (err) {
-                    console.error('Error adding meeting:', err);
+                    console.error('Error adding meetings:', err);
                     return res.status(500).json({ error: 'Internal Server Error' });
                 }
+
+                let new_meeting = meetings.find(meeting => meeting.chat_id === chatId);
                 
                 // Update chat acknowledgement field to true
-                chatModel.updateAcknowledgedById(chatId, (err, success) => {
+                chatModel.updateAcknowledgedById(chatId, new_meeting.meeting_id, (err, success) => {
                     if (err || !success) {
                         console.error('Error updating chat acknowledgement:', err);
                         return res.status(500).json({ error: 'Internal Server Error' });
                     }
 
-                    console.log({ success: true, message: 'Meeting created from chat successfully', meeting });
-                    res.status(201).json({ success: true, message: 'Meeting created from chat successfully', meeting });
+                    console.log({ success: true, message: 'Meeting created from chat successfully', meetings });
+                    res.status(201).json({ success: true, message: 'Meeting created from chat successfully', meetings });
                 });
             });
         });

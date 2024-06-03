@@ -14,4 +14,7 @@ router.post('/reset-password', authMiddleware, adminController.resetPassword);
 router.post('/login', adminController.loginAdmin);
 router.post('/generate', adminController.generate);
 
+//delete routes
+router.delete('/delete-admins-profile', authMiddleware, adminController.deleteAdminsProfile);
+
 module.exports = router;
