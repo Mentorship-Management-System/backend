@@ -29,7 +29,7 @@ const meetingController = {
 
     updateMeetingById: (req, res) => {
         const meetingId = req.params.meetingId;
-        const newData = req.body;
+        const newData = {...req.body, student_ids: req.body.student_ids.join(",")};
         meetingModel.updateMeetingById(meetingId, newData, (err, success) => {
             if (err) {
                 console.error('Error updating meeting:', err);

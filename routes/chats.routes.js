@@ -1,20 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const chatController = require('../controllers/chats.controller');
+const authMiddleware = require('../middleware/authMiddleware');
 
-router.get('/all', chatController.getAllChats);
-router.get('/get/:chatId', chatController.getChatById);
-router.get('/sent-from/:sentFrom', chatController.getChatsBySentFrom);
-router.get('/sent-to/:sentTo', chatController.getChatsBySentTo);
 
-router.post('/add', chatController.addChat);
+router.get('/all', authMiddleware, chatController.getAllChats);
+router.get('/get/:chatId', authMiddleware, chatController.getChatById);
+router.get('/sent-from/:sentFrom', authMiddleware, chatController.getChatsBySentFrom);
+router.get('/sent-to/:sentTo', authMiddleware, chatController.getChatsBySentTo);
 
-router.patch('/acknowledge/:chatId', chatController.updateAcknowledgedById);
+router.post('/add', authMiddleware, chatController.addChat);
 
-router.delete('/:chatId', chatController.deleteChatById);
+router.patch('/acknowledge/:chatId', authMiddleware, chatController.updateAcknowledgedById);
 
-router.put('/acknowledge-reply/:chatId', chatController.acknowledgeAndReplyChat);
-router.put('/acknowledge/add_meeting/:chatId', chatController.acknowledgeByMeeting);
-router.put('/:chatId', chatController.updateChatById);
+router.delete('/:chatId', authMiddleware, chatController.deleteChatById);
+
+router.put('/acknowledge-reply/:chatId', authMiddleware, chatController.acknowledgeAndReplyChat);
+router.put('/acknowledge/add_meeting/:chatId', authMiddleware, chatController.acknowledgeByMeeting);
+router.put('/:chatId', authMiddleware, chatController.updateChatById);
 
 module.exports = router;
