@@ -36,6 +36,17 @@ const adminModel = {
         });
     },
 
+    updateAdminById: (adminId, adminData, callback) => {
+        const query = 'UPDATE admins SET fname = ?, lname = ? WHERE admin_id = ?';
+        
+        db.query(query, [adminData.fname, adminData.lname, adminId], (err, result) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, result);
+        });
+    },
+
     insertCredentials: (admins, callback) => {
         const values = admins.map(admin => [admin.email, admin.hashedPassword, "admin"]);
         const query = 'INSERT INTO credentials (email, password, type) VALUES ?';
@@ -152,14 +163,14 @@ const adminModel = {
         });
     },
     
-    getAdminById: (adminId) => {
-        return new Promise((resolve, reject) => {
-            db.query('SELECT * FROM admins WHERE admin_id = ?', [adminId], (err, results) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(results[0]);
-            });
+    getAdminById: (adminId, callback) => {
+        const query = 'SELECT * FROM admins WHERE admin_id = ?';
+        
+        db.query(query, [adminId], (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, results[0]);
         });
     },
     

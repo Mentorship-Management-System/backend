@@ -10,6 +10,7 @@ router.get('/all', authMiddleware, studentsController.getAllStudents);
 router.get('/mentor/:mentorId', studentsController.getStudentsByMentorId);
 router.get('/count-by-year/:mentorId', authMiddleware, studentsController.getStudentCountByEnrollmentYear);
 router.get('/all-count-by-year', studentsController.getAllStudentsCountByYear);
+router.get('/year/gender-count', studentsController.getGenderCountByEnrollmentYear);
 
 router.post('/add', authMiddleware, studentsController.addStudent);
 router.post('/insert_students', studentsController.insertStudents);

@@ -585,6 +585,17 @@ const userController = {
                 res.status(200).json({ success: true, count: studentCounts });
             }
         });
+    },
+
+    getGenderCountByEnrollmentYear: (req, res) => {
+        studentModel.getGenderCountByEnrollmentYear()
+            .then((results) => {
+                res.status(200).json({ success: true, data: results });
+            })
+            .catch((err) => {
+                console.error('Error fetching gender count by enrollment year:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            });
     }
 };
 

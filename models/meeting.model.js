@@ -176,6 +176,46 @@ const meetingModel = {
             callback(null, result.affectedRows > 0);
         });
     },
+
+    getMonthWiseMeetingsCount: (mentorId, year) => {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT 
+                    MONTH(date) AS month, 
+                    COUNT(*) AS meeting_count 
+                FROM meetings 
+                WHERE mentor_id = ? AND YEAR(date) = ?
+                GROUP BY MONTH(date)
+                ORDER BY MONTH(date);
+            `;
+            db.query(query, [mentorId, year], (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(results);
+            });
+        });
+    },
+
+    getAllMonthWiseMeetingsCount: (year) => {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT 
+                    MONTH(date) AS month, 
+                    COUNT(*) AS meeting_count 
+                FROM meetings 
+                WHERE YEAR(date) = ?
+                GROUP BY MONTH(date)
+                ORDER BY MONTH(date);
+            `;
+            db.query(query, [year], (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(results);
+            });
+        });
+    }
 };
 
 module.exports = meetingModel;

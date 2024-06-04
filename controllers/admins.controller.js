@@ -40,6 +40,43 @@ const adminController = {
             }
         });
     },
+    getAdminById: (req, res) => {
+        const adminId = req.params.adminId;
+        
+        adminModel.getAdminById(adminId, (err, admin) => {
+            if (err) {
+                console.error('Error fetching admin by ID:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+            if (!admin) {
+                return res.status(404).json({ success: false, message: 'Admin not found' });
+            }
+            res.status(200).json({ success: true, admin });
+        });
+    },
+    updateAdminById: (req, res) => {
+        const adminId = req.params.adminId;
+        const { fname, lname } = req.body;
+    
+        adminModel.updateAdminById(adminId, { fname, lname }, (err, result) => {
+            if (err) {
+                console.error('Error updating admin by ID:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ success: false, message: 'Admin not found' });
+            }
+            
+            // Fetch the updated admin details
+            adminModel.getAdminById(adminId, (err, updatedAdmin) => {
+                if (err) {
+                    console.error('Error fetching updated admin by ID:', err);
+                    return res.status(500).json({ error: 'Internal Server Error' });
+                }
+                res.status(200).json({ success: true, message: 'Admin updated successfully', admin: updatedAdmin });
+            });
+        });
+    },
     getAllAdmins: (req, res) => {
         adminModel.getAllAdmins((err, results) => {
             if (err) {

@@ -9,6 +9,8 @@ router.put('/:meetingId', authMiddleware, meetingController.updateMeetingById);
 router.get('/mentor/:mentorId', authMiddleware, meetingController.getMeetingsByMentorId);
 router.get('/extended', authMiddleware, meetingController.getFullMeetingDetails);
 router.get('/full/mentor/:mentorId', authMiddleware, meetingController.getFullMeetingDetailbyMentor);
+router.get('/month-wise-count/:mentor_id', authMiddleware, meetingController.getMonthWiseMeetingsCount);
+router.get('/all-month-wise-count', authMiddleware, meetingController.getAllMonthWiseMeetingsCount);
 router.get('/students/:studentIds', authMiddleware, meetingController.getMeetingsByStudentIds);
 
 router.put('/:meetingId/:mentorId/approve', authMiddleware, meetingController.updateMeetingApprove);

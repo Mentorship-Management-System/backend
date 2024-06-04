@@ -399,7 +399,27 @@ const studentModel = {
                 callback(null, rows);
             }
         });
-    }    
+    },
+
+    getGenderCountByEnrollmentYear: () => {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT 
+                    enrollment_year,
+                    SUM(CASE WHEN gender = 'Male' THEN 1 ELSE 0 END) AS male_count,
+                    SUM(CASE WHEN gender = 'Female' THEN 1 ELSE 0 END) AS female_count
+                FROM students
+                GROUP BY enrollment_year;
+            `;
+            
+            db.query(query, (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(results);
+            });
+        });
+    }
 };
 
 module.exports = studentModel;

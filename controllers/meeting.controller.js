@@ -309,6 +309,33 @@ const meetingController = {
                 res.status(200).json({ success: true, meetings });
             });
         });
+    },
+
+    getMonthWiseMeetingsCount: (req, res) => {
+        const mentorId = req.params.mentor_id;
+        const currentYear = new Date().getFullYear();
+    
+        meetingModel.getMonthWiseMeetingsCount(mentorId, currentYear)
+            .then((result) => {
+                res.status(200).json({ success: true, data: result });
+            })
+            .catch((err) => {
+                console.error('Error fetching month-wise meetings count:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            });
+    },
+
+    getAllMonthWiseMeetingsCount: (req, res) => {
+        const currentYear = new Date().getFullYear();
+    
+        meetingModel.getAllMonthWiseMeetingsCount(currentYear)
+            .then((result) => {
+                res.status(200).json({ success: true, data: result });
+            })
+            .catch((err) => {
+                console.error('Error fetching month-wise meetings count:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            });
     }
 };
 

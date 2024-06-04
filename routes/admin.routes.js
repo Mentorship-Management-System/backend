@@ -7,8 +7,12 @@ const mentorController = require('../controllers/mentors.controller');
 
 //get routes
 router.get('/all', authMiddleware, adminController.getAllAdmins);
+router.get('/admins/:adminId', authMiddleware, adminController.getAdminById);
 router.get('/allocate', authMiddleware, adminController.allocateMentorsToStudents);
 router.get('/counts', authMiddleware, adminController.getCounts);
+
+router.put('/admins/:adminId', adminController.updateAdminById);
+
 router.post('/reset-password', authMiddleware, adminController.resetPassword);
 router.post('/forgot-password', adminController.frogotPassword);
 
