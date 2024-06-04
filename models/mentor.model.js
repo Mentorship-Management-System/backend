@@ -65,6 +65,7 @@ const MentorModel = {
                 callback(err, null);
                 return;
             }
+            console.log("Result", results);
             callback(null, results[0]);
         });
     },
@@ -210,7 +211,53 @@ const MentorModel = {
                 });
             });
         });
-    } 
+    },
+
+    createMentor: (mentorData) => {
+        return new Promise((resolve, reject) => {
+            const { email, fname, lname, gsuite_id } = mentorData;
+            db.query('INSERT INTO mentors (email, fname, lname, gsuite_id) VALUES (?, ?, ?, ?)', [email, fname, lname, gsuite_id], (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(results.insertId);
+            });
+        });
+    },
+    
+    createCredentials: (credentialsData) => {
+        return new Promise((resolve, reject) => {
+            const { email, password, type } = credentialsData;
+            db.query('INSERT INTO credentials (email, password, type) VALUES (?, ?, ?)', [email, password, type], (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(results.insertId);
+            });
+        });
+    },
+    
+    getMentorByEmailRegister: (email) => {
+        return new Promise((resolve, reject) => {
+            db.query('SELECT * FROM mentors WHERE email = ?', [email], (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(results[0]);
+            });
+        });
+    },
+
+    getAvailableMentors(callback) {
+        db.query('SELECT * FROM mentors WHERE isAvailableAsMentor = true', (err, mentors) => {
+            if (err) {
+                console.error('Error retrieving available mentors:', err);
+                callback(err, null);
+            } else {
+                callback(null, mentors);
+            }
+        });
+    }
 };
 
 module.exports = MentorModel;

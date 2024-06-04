@@ -1,5 +1,8 @@
 const chatModel = require('../models/chat.model');
 const meetingModel = require('../models/meeting.model');
+const studentModel = require('../models/student.model');
+const mentorModel = require('../models/mentor.model');
+const sendPasswordEmail = require('../nodeMailer');
 
 const chatController = {
     getAllChats: (req, res) => {
@@ -37,7 +40,44 @@ const chatController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(201).json({ success: true, message: 'Chat added successfully', chats });
+
+            chatModel.getChatsBySentFrom((req.body.sent_from), (err, chats) => {
+                if (err) {
+                    console.error('Error fetching chat:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
+                console.log("Chat", chats[chats.length - 1]);
+                let mentorId = chats[chats.length - 1].sent_to;
+                console.log("Mentor ID", mentorId);
+                mentorModel.getMentorById(mentorId, (er, results) => {
+                    if (er) {
+                        console.error('Error fetching chat:', err);
+                        res.status(500).json({ error: 'Internal Server Error' });
+                        return;
+                    }
+                    if(results && results.length === 0){
+                        res.status(201).json({ success: true, message: 'Chat added successfully', chats: chats.reverse() });
+                        return;
+                    }
+
+                    console.log("Mentor", results);
+                    let payload = {
+                        type: "new_message",
+                        to: results.email || results.gsuite_id
+                    }
+                    sendPasswordEmail(payload)
+                        .then(() => {
+                            console.log("Sending email.");
+                            res.status(201).json({ success: true, message: 'Chat added successfully', chats: chats.reverse() });
+                        })
+                        .catch((error) => {
+                            res.status(201).json({ success: true, message: 'Chat added successfully', chats: chats.reverse() });;
+                            console.error("Error sending email:", error);
+                        });
+                })
+            })
+            
         });
     },
 
@@ -153,8 +193,37 @@ const chatController = {
                         return res.status(500).json({ error: 'Internal Server Error' });
                     }
 
-                    console.log({ success: true, message: 'Meeting created from chat successfully', meetings });
-                    res.status(201).json({ success: true, message: 'Meeting created from chat successfully', meetings });
+                    chatModel.getChatById(chatId, (err, chat) => {
+                        if (err) {
+                            console.error('Error fetching chat:', err);
+                            res.status(500).json({ error: 'Internal Server Error' });
+                            return;
+                        }
+                        studentModel.getStudentsByIds([chat.sent_from], (er, students) => {
+                            if (er) {
+                                console.error('Error fetching chat:', err);
+                                res.status(500).json({ error: 'Internal Server Error' });
+                                return;
+                            }
+                            (students).forEach(element => {
+                                let payload = {
+                                    type: "new_meeting",
+                                    to: element.gsuite_id || element.email
+                                }
+                                sendPasswordEmail(payload)
+                                    .then(() => {
+                                        console.log("Sending email.");
+                                        res.status(201).json({ success: true, message: 'Meeting created from chat successfully', meetings });
+                                    })
+                                    .catch((error) => {
+                                        res.status(200).json({ success: true, message: 'Meeting created from chat successfully', meetings });
+                                        console.error("Error sending email:", error);
+                                    });
+                            });
+                        })
+                    })
+
+                    
                 });
             });
         });
@@ -169,7 +238,35 @@ const chatController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(200).json({ success: true, message: 'Chat acknowledged and replied successfully' });
+            chatModel.getChatById(chatId, (error, chat) => {
+                if (error) {
+                    console.error('Error fetching chat:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
+                studentModel.getStudentsByIds([chat.sent_from], (er, students) => {
+                    if (er) {
+                        console.error('Error fetching chat:', err);
+                        res.status(500).json({ error: 'Internal Server Error' });
+                        return;
+                    }
+                    (students).forEach(element => {
+                        let payload = {
+                            type: "mentor_reply",
+                            to: element.gsuite_id || element.email
+                        }
+                        sendPasswordEmail(payload)
+                            .then(() => {
+                                console.log("Sending email.");
+                                res.status(200).json({ success: true, message: 'Chat acknowledged and replied successfully' });
+                            })
+                            .catch((error) => {
+                                res.status(200).json({ success: true, message: 'Chat acknowledged and replied successfully' });
+                                console.error("Error sending email:", error);
+                            });
+                    });
+                })
+            })
         });
     }
 };

@@ -67,6 +67,27 @@ const adminModel = {
         });
     },
 
+    getCredByEmail: (email, callback) => {
+        const query = 'SELECT * FROM credentials WHERE email = ?';
+        db.query(query, [email], (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            // console.log(results);
+            callback(null, results[0]);
+        });
+    },
+
+    updatePassword: (email, hashedPassword, callback) => {
+        const query = 'UPDATE credentials SET password = ? WHERE email = ?';
+        db.query(query, [hashedPassword, email], (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+            callback(null, results.affectedRows > 0);
+        });
+    },
+
     deleteAdminsProfile: (adminIds, callback) => {
         db.beginTransaction((err) => {
             if (err) {
@@ -105,7 +126,53 @@ const adminModel = {
                 });
             });
         });
-    } 
+    },
+
+    createAdmin: (adminData) => {
+        return new Promise((resolve, reject) => {
+            const { email, fname, lname } = adminData;
+            db.query('INSERT INTO admins (email, fname, lname) VALUES (?, ?, ?)', [email, fname, lname], (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(results.insertId);
+            });
+        });
+    },
+    
+    createCredentials: (credentialsData) => {
+        return new Promise((resolve, reject) => {
+            const { email, password, type } = credentialsData;
+            db.query('INSERT INTO credentials (email, password, type) VALUES (?, ?, ?)', [email, password, type], (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(results.insertId);
+            });
+        });
+    },
+    
+    getAdminById: (adminId) => {
+        return new Promise((resolve, reject) => {
+            db.query('SELECT * FROM admins WHERE admin_id = ?', [adminId], (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(results[0]);
+            });
+        });
+    },
+    
+    getAdminByEmail: (email) => {
+        return new Promise((resolve, reject) => {
+            db.query('SELECT * FROM admins WHERE email = ?', [email], (err, results) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(results[0]);
+            });
+        });
+    },
 };
 
 module.exports = adminModel;

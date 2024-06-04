@@ -2,7 +2,8 @@ const adminModel = require('../models/admin.model');
 const studentModel = require('../models/student.model');
 const mentorModel = require('../models/mentor.model');
 const fs = require('fs');
-const crypto = require('crypto')
+const crypto = require('crypto');
+const sendPasswordEmail = require('../nodeMailer');
 
 // Function to generate random password
 const generateRandomPassword = (length) => {
@@ -46,7 +47,7 @@ const adminController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
-            res.status(200).json({ admins: results });
+            res.status(200).json({ admins: results.reverse() });
         });
     },
     generate: (req, res) => {
@@ -182,6 +183,87 @@ const adminController = {
                 res.status(200).json({ success: true, admins });
             });
         });
+    },
+
+    frogotPassword: (req, res) => {
+        const { email } = req.body;
+        let new_password = generateRandomPassword(8);
+        const hashedPassword = hashPassword(new_password);
+
+        adminModel.getCredByEmail(email, (err, result) => {
+            if(err){
+                console.log(err);
+                return res.status(500).json({ message: "Internal server error." })
+            }
+            if(!result || result === undefined){
+                return res.status(500).json({ message: "User does not exists with the entered email" })
+            }
+            adminModel.updatePassword(email, hashedPassword, (err, result) => {
+                if (err) {
+                    console.error('Error resetting mentor password:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                } else {
+                    let payload = {
+                        type: "forgot_password",
+                        to: email,
+                        password: new_password
+                    }
+                    sendPasswordEmail(payload)
+                        .then(() => {
+                            console.log("Sending email.");
+                            res.status(200).json({ success: true, message: 'A new password is sent to the entered email address.' })
+                        })
+                        .catch((error) => {
+                            res.status(200).json({ success: true, message: 'Chat acknowledged and replied successfully' });
+                            console.error("Error sending email:", error);
+                        });
+                    ;
+                }
+            });
+        })
+    },
+
+    registerAdmin: async (req, res) => {
+        const { email, password, fname, lname } = req.body;
+    
+        try {
+            // Check if the email is already registered
+            const existingAdmin = await adminModel.getAdminByEmail(email);
+            if (existingAdmin) {
+                return res.status(400).json({ error: 'Email is already registered' });
+            }
+    
+            // Hash the password
+            const hashedPassword = hashPassword(password);
+    
+            // Create the admin
+            const newAdmin = {
+                email,
+                fname,
+                lname
+            };
+    
+            // Insert admin into the database and get the inserted ID
+            const adminId = await adminModel.createAdmin(newAdmin);
+    
+            // Prepare credentials data
+            const credentialsData = {
+                email,
+                password: hashedPassword,
+                type: 'admin'
+            };
+    
+            // Insert credentials into the database
+            await adminModel.createCredentials(credentialsData);
+    
+            // Fetch the newly added admin's details
+            const addedAdmin = await adminModel.getAdminByEmail(email);
+    
+            res.status(201).json({ success: true, message: 'Admin registered successfully', admin: addedAdmin });
+        } catch (error) {
+            console.error('Error registering admin:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
     }
 };
 

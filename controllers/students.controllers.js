@@ -527,6 +527,65 @@ const userController = {
             });
         });
     },
+
+    insertStudentCredentials(req, res) {
+        const students = req.body;
+        const insertedStudents = [];
+        // res.status(201).json({ message: 'Students added successfully', students: students })
+
+        Promise.all(students.map((studentData, index) => {
+            return new Promise((resolve, reject) => {
+                studentModel.insertStudent(studentData, (err, studentId) => {
+                    if (err) {
+                        console.error(`Error adding student ${index + 1}:`, err);
+                        reject(err);
+                    } else {
+                        const hashedPassword = hashPassword(studentData.password);
+                        studentModel.insertStudentCredentials(studentData.gsuite_id, hashedPassword, (err) => {
+                            if (err) {
+                                console.error(`Error registering credentials for student ${index + 1}:`, err);
+                                reject(err);
+                            } else {
+                                insertedStudents.push({ studentId, ...studentData });
+                                resolve();
+                            }
+                        });
+                    }
+                });
+            });
+        })).then(() => {
+            res.status(201).json({ message: 'Students added successfully', students: insertedStudents });
+        }).catch((err) => {
+            res.status(500).json({ error: 'Internal server error' });
+        });
+    },
+
+    getStudentCountByEnrollmentYear: async (req, res) => {
+        const startYear = parseInt(req.query.startYear, 10) || 2020;
+        const mentorId = req.params.mentorId
+
+        studentModel.getStudentCountByYearRange(startYear, mentorId, (err, studentCounts) => {
+            if (err) {
+                console.error(err);
+                res.status(500).json({ message: 'Error fetching student count' });
+            } else {
+                res.status(200).json({ success: true, count: studentCounts });
+            }
+        });
+    },
+
+    getAllStudentsCountByYear(req, res) {
+        const startYear = parseInt(req.query.startYear, 10) || 2020; // Default to 2020 if not provided
+    
+        studentModel.getAllStudentCountByYearRange(startYear, (err, studentCounts) => {
+            if (err) {
+                console.error(err);
+                res.status(500).json({ message: 'Error fetching student count' });
+            } else {
+                res.status(200).json({ success: true, count: studentCounts });
+            }
+        });
+    }
 };
 
 module.exports = userController;

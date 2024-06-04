@@ -318,6 +318,87 @@ const studentModel = {
                 });
             });
         });
+    },
+
+    insertStudent(studentData, callback) {
+        db.query('INSERT INTO students (fname, lname, programme, enrollment_year, gsuite_id, email, phone, enrollment_no) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [studentData.fname, studentData.lname, studentData.programme, studentData.enrollment_year, studentData.gsuite_id, studentData.email, studentData.phone, studentData.enrollment_no], (err, result) => {
+            if (err) {
+                console.error('Error inserting student data: ' + err);
+                callback(err, null);
+            } else {
+                console.log('Student data inserted successfully');
+                callback(null, result.insertId); // Callback with the ID of the inserted student
+            }
+        });
+    },
+
+    insertStudentCredentials(email, password, callback) {
+        db.query('INSERT INTO credentials (email, password, type) VALUES (?, ?, ?)', [email, password, "student"], (err, result) => {
+            if (err) {
+                console.error('Error registering credentials: ' + err);
+                callback(err);
+            } else {
+                console.log('Credentials registered successfully');
+                callback(null);
+            }
+        });
+    },
+
+    getStudentsWithoutMentor(callback) {
+        db.query('SELECT * FROM students WHERE mentor_id IS NULL', (err, students) => {
+            if (err) {
+                console.error('Error retrieving students without mentor:', err);
+                callback(err, null);
+            } else {
+                callback(null, students);
+            }
+        });
+    },
+
+    updateStudentMentor(studentId, mentorId, callback) {
+        db.query('UPDATE students SET mentor_id = ? WHERE student_id = ?', [mentorId, studentId], (err, result) => {
+            if (err) {
+                console.error('Error updating student mentor:', err);
+                callback(err);
+            } else {
+                callback(null);
+            }
+        });
+    },
+
+    getStudentCountByYearRange(startYear, mentorId, callback) {
+        const query = `
+            SELECT enrollment_year, COUNT(*) AS student_count
+            FROM students
+            WHERE enrollment_year >= ?
+            AND mentor_id = ?
+            GROUP BY enrollment_year
+            ORDER BY enrollment_year ASC;
+        `;
+        db.query(query, [startYear, mentorId], (error, rows) => {
+            if (error) {
+                callback(error);
+            } else {
+                callback(null, rows);
+            }
+        });
+    },
+
+    getAllStudentCountByYearRange(startYear, callback) {
+        const query = `
+            SELECT enrollment_year, COUNT(*) AS student_count
+            FROM students
+            WHERE enrollment_year >= ?
+            GROUP BY enrollment_year
+            ORDER BY enrollment_year ASC;
+        `;
+        db.query(query, [startYear], (error, rows) => {
+            if (error) {
+                callback(error);
+            } else {
+                callback(null, rows);
+            }
+        });
     }    
 };
 

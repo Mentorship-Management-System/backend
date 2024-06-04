@@ -8,6 +8,9 @@ router.post('/generate', studentsController.generate);
 
 router.get('/all', authMiddleware, studentsController.getAllStudents);
 router.get('/mentor/:mentorId', studentsController.getStudentsByMentorId);
+router.get('/count-by-year/:mentorId', authMiddleware, studentsController.getStudentCountByEnrollmentYear);
+router.get('/all-count-by-year', studentsController.getAllStudentsCountByYear);
+
 router.post('/add', authMiddleware, studentsController.addStudent);
 router.post('/insert_students', studentsController.insertStudents);
 router.post('/search', authMiddleware, studentsController.searchStudents);
@@ -17,6 +20,7 @@ router.post('/assign-mentees', authMiddleware, studentsController.assignMenteesT
 
 router.post('/saveSemesterDetails', authMiddleware, studentsController.saveSemesterDetails);
 router.post('/save-sgpa', authMiddleware, studentsController.saveSgpa);
+router.post('/upload-students', authMiddleware, studentsController.insertStudentCredentials);
 
 router.get('/mentor/:mentorIndex', authMiddleware, studentsController.getStudentsByMentorIndex);
 router.get('/:rollno', authMiddleware, studentsController.getStudentById);

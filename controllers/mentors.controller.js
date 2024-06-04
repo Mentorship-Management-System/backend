@@ -19,6 +19,14 @@ const hashPassword = (password) => {
     return hashedPassword;
 }
 
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 const mentorController = {
     loginMentor: (req, res) => {
         const { email, password } = req.body;
@@ -415,6 +423,124 @@ const mentorController = {
                 res.status(200).json({ success: true, mentors });
             });
         });
+    },
+
+    registerMentor: async (req, res) => {
+        const { email, password, fname, lname, gsuite_id } = req.body;
+    
+        try {
+            // Check if the email is already registered
+            const existingMentor = await mentorModel.getMentorByEmailRegister(email);
+            if (existingMentor) {
+                return res.status(400).json({ error: 'Email is already registered' });
+            }
+    
+            // Hash the password
+            const hashedPassword = hashPassword(password);
+    
+            // Create the mentor
+            const newMentor = {
+                email,
+                fname,
+                lname,
+                gsuite_id
+            };
+    
+            // Insert mentor into the database and get the inserted ID
+            const mentorId = await mentorModel.createMentor(newMentor);
+    
+            // Prepare credentials data
+            const credentialsData = {
+                email,
+                password: hashedPassword,
+                type: 'mentor'
+            };
+    
+            // Insert credentials into the database
+            await mentorModel.createCredentials(credentialsData);
+    
+            // Fetch the newly added mentor's details
+            const addedMentor = await mentorModel.getMentorByEmailRegister(email);
+    
+            res.status(201).json({ success: true, message: 'Mentor registered successfully', mentor: addedMentor });
+        } catch (error) {
+            console.error('Error registering mentor:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    },
+
+    allocateMentorsToStudents: (req, res) => {
+        mentorModel.getAvailableMentors((err, mentors) => {
+            if (err) {
+                console.error('Error retrieving available mentors:', err);
+                res.status(500).json({ error: 'Internal server error' });
+            } else {
+                studentModel.getStudentsWithoutMentor((err, students) => {
+                    if (err) {
+                        console.error('Error retrieving students without mentor:', err);
+                        res.status(500).json({ error: 'Internal server error' });
+                    } else {
+                        // Shuffle the students array
+                        students = shuffleArray(students);
+    
+                        const numMentors = mentors.length;
+                        const numStudents = students.length;
+                        const studentsPerMentor = Math.floor(numStudents / numMentors);
+                        let remainingStudents = numStudents % numMentors;
+    
+                        mentors.forEach((mentor, index) => {
+                            const assignedStudents = students.splice(0, studentsPerMentor + (remainingStudents > 0 ? 1 : 0));
+                            assignedStudents.forEach(student => {
+                                studentModel.updateStudentMentor(student.student_id, mentor.mentor_id, (err) => {
+                                    if (err) {
+                                        console.error(`Error updating mentor for student ${student.student_id}:`, err);
+                                    }
+                                });
+                            });
+                            remainingStudents--;
+                        });
+    
+                        res.status(200).json({ message: 'Mentors allocated to students successfully' });
+                    }
+                });
+            }
+        });
+    },
+
+    manualAllocateMentorsToStudents(req, res) {
+        const { students, mentors } = req.body;
+    
+        if (mentors.length === 1) {
+            const mentorId = mentors[0];
+            students.forEach(studentId => {
+                studentModel.updateStudentMentor(studentId, mentorId, (err) => {
+                    if (err) {
+                        console.error(`Error updating mentor for student ${studentId}:`, err);
+                    }
+                });
+            });
+            res.status(200).json({ message: 'Students assigned to mentor successfully' });
+        } else {
+            const numMentors = mentors.length;
+            const numStudents = students.length;
+            const shuffledStudents = shuffleArray(students);
+            const studentsPerMentor = Math.floor(numStudents / numMentors);
+            let remainingStudents = numStudents % numMentors;
+    
+            mentors.forEach((mentorId, index) => {
+                const assignedStudents = shuffledStudents.splice(0, studentsPerMentor + (remainingStudents > 0 ? 1 : 0));
+                assignedStudents.forEach(studentId => {
+                    studentModel.updateStudentMentor(studentId, mentorId, (err) => {
+                        if (err) {
+                            console.error(`Error updating mentor for student ${studentId}:`, err);
+                        }
+                    });
+                });
+                remainingStudents--;
+            });
+    
+            res.status(200).json({ message: 'Students assigned to mentors successfully' });
+        }
     }
 };
 

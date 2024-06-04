@@ -6,6 +6,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 
 router.post('/login', mentorController.loginMentor);
 router.post('/generate/:mentorId?', mentorController.generate);
+router.post('/register', mentorController.registerMentor);
 
 // Protected routes
 router.get('/all', authMiddleware, mentorController.getAllMentors);

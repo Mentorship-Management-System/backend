@@ -1,6 +1,7 @@
 const meetingModel = require('../models/meeting.model');
 const mentorModel = require('../models/mentor.model');
 const studentModel = require('../models/student.model');
+const sendPasswordEmail = require('../nodeMailer');
 
 const meetingController = {
     getAllMeetings: (req, res) => {
@@ -23,6 +24,33 @@ const meetingController = {
                 res.status(500).json({ error: 'Internal Server Error' });
                 return;
             }
+
+            studentModel.getStudentsByIds(req.body.student_ids, (err, students) => {
+                if (err) {
+                    console.error('Error updating meeting:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
+                if (!students) {
+                    res.status(404).json({ error: 'Student not found' });
+                    return;
+                }
+                (students).forEach(element => {
+                    // console.log(element);
+                    
+                    let payload = {
+                        type: "update_meeting",
+                        to: element.gsuite_id || element.email
+                    }
+                    sendPasswordEmail(payload)
+                        .then(() => {
+                            console.log("Sending email.");
+                        })
+                        .catch((error) => {
+                            console.error("Error sending email:", error);
+                        });
+                });
+            })
             res.status(201).json({ success: true, message: 'Meeting added successfully', meetings: meetings.reverse() });
         });
     },
@@ -40,6 +68,35 @@ const meetingController = {
                 res.status(404).json({ error: 'Meeting not found' });
                 return;
             }
+
+            studentModel.getStudentsByIds(req.body.student_ids, (err, students) => {
+                if (err) {
+                    console.error('Error updating meeting:', err);
+                    res.status(500).json({ error: 'Internal Server Error' });
+                    return;
+                }
+                if (!students) {
+                    res.status(404).json({ error: 'Student not found' });
+                    return;
+                }
+                (students).forEach(element => {
+                    // console.log(element);
+                    
+                    let payload = {
+                        type: "update_meeting",
+                        to: element.gsuite_id || element.email,
+                        updated_meeting: req.body.title
+                    }
+                    sendPasswordEmail(payload)
+                        .then(() => {
+                            console.log("Sending email.");
+                        })
+                        .catch((error) => {
+                            console.error("Error sending email:", error);
+                        });
+                });
+            })
+            
             res.status(200).json({ success: true, message: 'Meeting updated successfully' });
         });
     },
