@@ -44,7 +44,48 @@ const MentorModel = {
     },
 
     getAllAvailableMentors: (callback) => {
-        db.query('SELECT * FROM mentors WHERE is_mentor is TRUE', callback);
+        const query = `
+            SELECT 
+                mentors.*, 
+                IFNULL(
+                    CONCAT('[', GROUP_CONCAT(
+                        JSON_OBJECT(
+                            'student_id', students.student_id, 
+                            'fname', students.fname, 
+                            'lname', students.lname
+                        ) 
+                        SEPARATOR ','
+                    ), ']'), '[]'
+                ) AS assigned_mentees
+            FROM 
+                mentors
+            LEFT JOIN 
+                students ON mentors.mentor_id = students.mentor_id
+            WHERE 
+                mentors.isAvailableAsMentor = TRUE
+            GROUP BY 
+                mentors.mentor_id;
+        `;
+
+        db.query(query, (err, results) => {
+            if (err) {
+                return callback(err);
+            }
+
+            // Parse the JSON objects for assigned mentees
+            const parsedResults = results.map(mentor => {
+                let assignedMentees = [];
+                if (mentor.assigned_mentees && mentor.assigned_mentees !== '[]') {
+                    assignedMentees = JSON.parse(`[${mentor.assigned_mentees}]`).filter(mentee => mentee.student_id !== null);
+                }
+                return {
+                    ...mentor,
+                    assigned_mentees: assignedMentees
+                };
+            });
+
+            callback(null, parsedResults);
+        });
     },
 
     getAllMentorsWithMentees: (callback) => {

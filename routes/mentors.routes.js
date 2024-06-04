@@ -10,6 +10,7 @@ router.post('/register', mentorController.registerMentor);
 
 // Protected routes
 router.get('/all', authMiddleware, mentorController.getAllMentors);
+router.get("/all-available", authMiddleware, mentorController.getAllAvailableMentors)
 router.get('/with-mentees', authMiddleware, mentorController.getAllMentorsWithMentees);
 // router.get('/allocate/mentees', authMiddleware, mentorController.allocateMentees);
 router.get('/:mentorId', authMiddleware, mentorController.getMentorById);

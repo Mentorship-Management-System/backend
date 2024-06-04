@@ -120,6 +120,17 @@ const mentorController = {
         });
     },
 
+    getAllAvailableMentors: (req, res) => {
+        mentorModel.getAllAvailableMentors((err, results) => {
+            if (err) {
+                console.error('Error fetching all mentors:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+                return;
+            }
+            res.status(200).json({ success: true, mentors: results });
+        });
+    },
+
     getMentorById: (req, res) => {
         const mentorId = req.params.mentorId;
         mentorModel.getMentorById(mentorId, (err, results) => {
